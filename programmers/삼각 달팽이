@@ -1,0 +1,39 @@
+class Solution {
+    public int[] solution(int n) {
+        int size = n*(n+1)/2;
+        int[] answer = new int[size];
+        int idx = 0;
+        int gap = 0;
+        int num = 1;
+        for(int i=n; i>0; i--){
+            int type = (n-i)%3;
+            if(type == 0){              // 왼쪽아래 방향 대각선
+                int strt_num1 = num;
+                for(int j=num; j<num+i; j++){
+                    idx += gap;
+                    answer[idx] = strt_num1++;
+                    gap++;
+                }
+                num = strt_num1;
+            } else if(type == 1){       // 수평
+                int strt_num2 = num;
+                for(int j=num; j<num+i; j++){
+                    idx ++;
+                    answer[idx] = strt_num2++;
+                }
+                num = strt_num2;
+            } else {                    // 왼쪽위 방향 대각선
+                int strt_num3 = num;
+                for(int j=num; j<num+i; j++){
+                    idx -= gap;
+                    answer[idx] = strt_num3++;
+                    gap--;
+                }
+                num = strt_num3;
+            }
+
+        }
+
+        return answer;
+    }
+}
