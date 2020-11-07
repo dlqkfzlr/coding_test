@@ -1,0 +1,16 @@
+class Solution {
+    fun solution(numbers: IntArray, target: Int): Int {
+        var answer = 0
+        answer = dfs(numbers, 0, 0, target)
+        return answer
+    }
+    private fun dfs(numbers: IntArray, node: Int, sum: Int, target: Int) : Int{
+        // System.out.println("dfs(node:"+node+", sum:"+sum+")")
+        if(node == numbers.size){
+            if(sum == target)
+                return 1;
+            return 0;
+        }
+        return dfs(numbers, node+1, sum + numbers[node], target) + dfs(numbers, node+1, sum - numbers[node], target)
+    }
+}
