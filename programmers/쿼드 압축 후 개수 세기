@@ -1,0 +1,58 @@
+class Solution {
+    /* 풀이과정 
+    1. dfs메소드로 길이 n인 해당 구역을 스캔해서
+       구역 전체가 0인지 1인지 검사함
+       0일 경우 -> zeroCnt++
+       1일 경우 -> oneCnt++
+       둘다 아닐 경우 -> 4가지로 쪼개서 dfs진행
+                       dfs(n/2, x, y)
+                       dfs(n/2, x + n/2, y)
+                       dfs(n/2, x, y + n/2)
+                       dfs(n/2, x + n/2, y + n/2)
+
+     2. dfs의 baseCase는 n=0인 경우이다.
+    */
+    private lateinit var codeList: Array<IntArray>      
+    private var zeroCnt = 0
+    private var oneCnt = 0
+    fun solution(arr: Array<IntArray>): IntArray {
+        codeList = arr
+        dfs(codeList.size, 0, 0)
+        return intArrayOf(zeroCnt, oneCnt)
+    }
+
+    fun dfs(n: Int, x: Int, y: Int) {
+        if(n == 1) {
+            countSingleCode(x, y)
+            return
+        }
+        if(hasSameCode(n, x, y)){   // zeroCnt or oneCnt를 증가시킴
+            countSingleCode(x, y)
+            return
+        }
+        dfs(n/2, x, y)
+        dfs(n/2, x + n/2, y)
+        dfs(n/2, x, y + n/2)
+        dfs(n/2, x + n/2, y + n/2)
+    }
+
+    fun hasSameCode(n: Int, x: Int, y: Int): Boolean {
+        var firstCode = 0
+        for(i in x until x+n){
+            for(j in y until y+n){
+                if(i == x && j == y){
+                    firstCode = codeList[i][j]
+                    continue
+                }
+                if(firstCode != codeList[i][j]){
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    fun countSingleCode(x: Int, y: Int) {
+        if(codeList[x][y] == 0) zeroCnt++ else oneCnt++
+    }
+}
