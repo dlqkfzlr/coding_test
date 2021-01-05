@@ -1,0 +1,65 @@
+/* My Answer */
+class Solution {
+    fun solution(s: String): IntArray {
+        /* [풀이과정] : regex없이 String내장함수를 이용함 */
+        val elemList = convertToIntList(s).sortedBy{ list -> list.size }
+        val size = elemList.size
+        val answer = IntArray(size)
+        answer[0] = elemList[0][0]
+        for(i in 1 until size) {
+            val small = elemList[i-1]
+            val large = elemList[i]
+            for(j in 0 until large.size){
+                if(!small.contains(large[j])) {
+                    answer[i] = large[j]
+                }
+            }
+        }
+        return answer
+    }
+
+    fun convertToIntList(s: String): MutableList<List<Int>> {
+        val tuples = s.subSequence(1, s.length-1)
+        val intListOfList = mutableListOf<List<Int>>()
+        val sb = StringBuilder("")
+        var intList = mutableListOf<Int>()
+        try{
+            for(c in tuples){
+                when(c){
+                    '}' -> {
+                        intList.add(sb.toString().toInt())
+                        intListOfList.add(intList)
+                        sb.clear()
+                        intList = mutableListOf<Int>()
+                    }
+
+                    ',' -> {
+                        if(!sb.isNullOrBlank()) intList.add(sb.toString().toInt())
+                        sb.clear()
+                    }
+
+                    else -> {
+                        if(c != '{') sb.append(c)
+                    }
+                }
+            }
+            return intListOfList
+        } catch(e: NumberFormatException){
+            throw e   
+        }
+    }
+}
+
+/* 모범답안 */
+class Solution {
+    fun solution(s: String): IntArray {
+        return s.substring(2 until s.length-2)
+            .split("},{")
+            .asSequence()
+            .map { it.split(",").map { num -> num.toInt() } }
+            .toList()
+            .sortedBy { it.size }
+            .fold(setOf<Int>()) { acc, list -> acc.union(list) }
+            .toIntArray()
+    }
+}
