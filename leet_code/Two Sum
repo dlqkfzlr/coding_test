@@ -1,0 +1,18 @@
+class Solution {
+    
+    fun twoSum(nums: IntArray, target: Int): IntArray {
+        val map = HashMap<Int, Int>()
+        val size = nums.size
+        for(i in 0 until size){
+            map.put(nums[i], i)
+        }
+        for(i in 0 until size){
+            val gap = target - nums[i]
+            if(map.containsKey(gap) && map[gap] != i){
+                return intArrayOf(i, map[gap]!!)
+            }
+        }
+        throw IllegalArgumentException("No Solution")
+    }
+  
+}
