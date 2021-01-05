@@ -1,0 +1,12 @@
+class Solution {
+    fun solution(citations: IntArray): Int {
+        var answer = 0
+        val max = citations.max() ?: 0
+        val end = if(max  >= citations.size) max else citations.size
+        for(i in 0 until end){
+            val cnt = citations.count{ citation: Int -> citation >= i }
+            if(cnt >= i) answer = i
+        }
+        return answer
+    }
+}
