@@ -1,0 +1,19 @@
+import kotlin.math.*
+
+class Solution {
+    fun reverse(x: Int): Int { 
+        val isMinus = x < 0
+        val num = x.toString().toList()
+                .filter{ s -> s != '-'}
+                .map{ s -> s.toString() }
+                .reversed()
+                .reduce{ total, single -> total + single }
+                .toLong()
+        if(num !in 2.0.pow(31).toLong() * (-1) until 2.0.pow(31).toLong()) return 0
+        
+        return if(isMinus) num.toInt() * (-1) else num.toInt() 
+    }
+}
+/* [주의사항]
+Int형 문제는 항상 마지막에 Long타입으로 범위 체크한 다음에 toInt()로 변환할것!
+*/
