@@ -14,6 +14,23 @@ class Solution {
         return if(isMinus) num.toInt() * (-1) else num.toInt() 
     }
 }
-/* [주의사항]
+/* 
+[주의사항]
 Int형 문제는 항상 마지막에 Long타입으로 범위 체크한 다음에 toInt()로 변환할것!
 */
+
+// LeetCode 모범답안 (JAVA)
+// 나눗셈의 나머지를 사용하여 스택없이 pop방식을 쉽게 구현함
+class Solution {
+    public int reverse(int x) {
+        int rev = 0;
+        while (x != 0) {
+            int pop = x % 10;
+            x /= 10;
+            if (rev > Integer.MAX_VALUE/10 || (rev == Integer.MAX_VALUE / 10 && pop > 7)) return 0;
+            if (rev < Integer.MIN_VALUE/10 || (rev == Integer.MIN_VALUE / 10 && pop < -8)) return 0;
+            rev = rev * 10 + pop;
+        }
+        return rev;
+    }
+}
