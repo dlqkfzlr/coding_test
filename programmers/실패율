@@ -1,0 +1,27 @@
+class Solution {
+    fun solution(N: Int, stages: IntArray): IntArray {
+        val failure = hashMapOf<Int, Double>()
+        for(i in 1 .. N){
+            var num = 0.0
+            var den = 0
+            for(j in 0 until stages.size){
+                if(stages[j] > i){
+                    den++
+                } else if(stages[j] == i) {
+                    num++
+                    den++
+                }
+            }
+            failure.put(i, if(den == 0) 0.0 else num/den)
+        }
+        
+        val result = failure.toList().sortedByDescending{ (_, value) -> value}.toMap()
+        val report = IntArray(N)
+        var n = 0
+        for(entry in result){
+            report[n++] = entry.key
+        }
+        
+        return report
+    }
+}
