@@ -1,0 +1,10 @@
+// [단점] => 컬렉션 함수 사용으로 실행시간이 너무 길다
+
+class Solution {
+    fun isPalindrome(s: String): Boolean {
+        val s0 = s.toList().filter{ v -> v in '0'..'9' || v in 'a'..'z' || v in 'A'..'Z' }
+        if(s0.isEmpty() || s.isBlank()) return true
+        val s1 = s0.map { v -> v.toString() }.reduce{ total, single -> total + single }
+        return s1.equals(s1.reversed(), ignoreCase = true)
+    }
+}
