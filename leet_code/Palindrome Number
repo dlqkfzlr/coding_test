@@ -16,3 +16,22 @@ class Solution {
         return x == y
     }
 }
+
+// 모범답안
+class Solution {
+    fun isPalindrome(x: Int): Boolean {
+        if (x < 0) return false
+
+        return x == reverseInt(x)
+    }
+
+    private fun reverseInt(x: Int): Int {
+        var result = 0
+        var y = x
+        while (y != 0) {
+            result = result * 10 + y % 10
+            y /= 10
+        }
+        return result
+    }
+}
