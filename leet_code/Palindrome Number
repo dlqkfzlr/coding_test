@@ -1,0 +1,18 @@
+// [특이점]
+// String변환 없이 풀이
+class Solution {
+    fun isPalindrome(x: Int): Boolean {
+        if(x < 0) return false
+        if(x < 10) return true
+        var num = x
+        var y = 0
+        while(num > 9){
+            val remain = num % 10
+            y = y * 10 + remain
+            if(num / 10 != 0) num = num / 10 else num = num % 10
+        }
+        y = y * 10 + num
+        
+        return x == y
+    }
+}
