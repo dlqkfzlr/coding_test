@@ -1,0 +1,32 @@
+// [어려웠던 Point]
+// 1. ListNode를 List형식으로 바꿔서 reduce를 사용하여 최종적으로 String -> Int로 변환하려했음
+// 하지만 제한사항에서 ListNode의 범위가 100이하여서 100자리 문자열를 숫자로 바꾸려하니 NumberFormatException 발생함
+// 앞으론 무조건 Collection 함수를 쓰려고 하기 보단, 최대한 Int만으로 간결하게 풀수있는 알고리즘을 고려하고 풀이해볼것
+//
+// 2. while문으로 ListNode를 초기화할때 node = node.next 방식으로 반복문을 거칠때마다 next노드가 주인공이 되도록 해야했음 (처음엔 ArrayList를 따로 사용하려했음...)
+// 하지만 간단하게 dummyNode를 초기화시켜놓고 이를 clone한 ListNode를 만들어서 반복문에서 사용하는 간단한 방식이 있음을 몰랐다....
+
+class Solution {
+        
+    fun addTwoNumbers(l1: ListNode?, l2: ListNode?): ListNode? {
+        val dummyHead = ListNode(0)
+        var p = l1
+        var q = l2
+        var curr = dummyHead
+        var carry = 0
+        while(p != null || q != null) {
+            val x = if(p != null) p.`val` else 0
+            val y = if(q != null) q.`val` else 0
+            val sum = x + y + carry
+            carry = sum / 10
+            curr.next = ListNode(sum % 10)
+            curr = curr.next
+            if(p != null) p = p.next
+            if(q != null) q = q.next
+        }
+        if(carry > 0) curr.next = ListNode(carry)
+        
+        return dummyHead.next
+    }
+    
+}
