@@ -1,0 +1,28 @@
+/* 나의 풀이 (Dynamic Programming) */
+class Solution {
+
+    lateinit var fiboArr: LongArray
+    val divider = 1234567L
+    fun solution(n: Int): Int {
+        fiboArr = LongArray(n+1)
+        fiboArr[0] = 0
+        fiboArr[1] = 1
+        fibo(n)
+        return fiboArr[n].toInt()
+    }
+
+    // DP 풀이
+    fun fibo(n: Int) {
+        for(i in 2..n){
+            val num = fiboArr[i-1] + fiboArr[i-2]
+            fiboArr[i] = if(num >= divider) num % divider else num
+        }
+    }
+
+}
+
+/* 모범답안 (꼬리재귀) */
+class Solution {
+    fun solution(n: Int): Int = if(n == 1 || n == 2) 1 else fib(n, 1, 1)  
+    tailrec fun fib(n: Int, a: Int, b: Int): Int = if(n == 1) a else fib(n - 1, b % 1234567, (a + b) % 1234567)
+}
