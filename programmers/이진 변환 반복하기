@@ -1,0 +1,18 @@
+class Solution {
+    var convertCount = 0
+    var zeroCount = 0
+    lateinit var result: String
+    fun solution(s: String): IntArray {
+        result = s
+        while(result != "1"){
+            convertToBinary(result)
+        }
+        return intArrayOf(convertCount, zeroCount)
+    }
+
+    fun convertToBinary(s: String) {
+        convertCount++
+        zeroCount += s.toList().count{ v -> v == '0' }
+        result = s.toList().count{ v -> v != '0' }.toString(2)
+    }
+}
