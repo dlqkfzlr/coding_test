@@ -1,0 +1,33 @@
+class Solution {
+    fun solution(s: String): String {
+        val numArr = s.toCharArray()
+        val numList = ArrayList<Int>()
+        var idx = 0
+        val size = numArr.size
+        val sb = StringBuilder("")
+        for(i in 0 until size) {
+            val num = numArr[i]
+            when(num){
+                ' ' -> {
+                    numList.add(sb.toString().toInt())
+                    idx++
+                    sb.clear()
+                }
+                '-' -> {
+                    sb.append(num)
+                }
+                else -> {
+                    sb.append(num)
+                }
+            }
+            if(i == size-1) numList.add(sb.toString().toInt())
+        }
+        var answer = "${numList.min()} ${numList.max()}"
+        return answer
+    }
+}
+
+/* 모범답안 */
+class Solution {
+    fun solution(s: String): String = s.split(" ").map { it.toInt() }.let { "${it.min()} ${it.max()}" }
+}
