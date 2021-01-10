@@ -1,0 +1,18 @@
+class Solution {
+    fun solution(arr1: Array<IntArray>, arr2: Array<IntArray>): Array<IntArray> {
+        val a = arr1.size
+        val b = arr2.size
+        val c = arr2[0].size
+        val answer = Array(a){IntArray(c)}
+        for(n in 0 until a){
+            for(m in 0 until c){
+                var acum = 0
+                for(p in 0 until b){
+                    acum += arr1[n][p] * arr2[p][m]
+                }
+                answer[n][m] = acum
+            }
+        }
+        return answer
+    }
+}
