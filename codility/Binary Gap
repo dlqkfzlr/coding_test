@@ -1,0 +1,16 @@
+fun solution(N: Int): Int {
+    // write your code in Kotlin
+    val binaryStr = N.toString(2)
+    var maxGap = 0
+    var startIdx = 0
+    binaryStr.forEachIndexed { i, v ->
+        if(v == '1') {
+            if(i != startIdx){
+                val gap = i - startIdx - 1
+                if(gap > 0 && gap > maxGap) maxGap = gap
+                startIdx = i
+            }
+        }
+    }
+    return maxGap
+}
