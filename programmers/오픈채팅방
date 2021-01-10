@@ -1,0 +1,37 @@
+class Solution {
+
+    lateinit var uidMap: HashMap<String, String>
+
+    fun solution(record: Array<String>): Array<String> {
+        uidMap = HashMap<String, String>()
+        val newRecord = ArrayList<String>()
+        record.toList().forEach{ rec ->
+            val rStr = rec.split(" ")
+            when(rStr[0]){
+                "Enter" -> {
+                    uidMap.put(rStr[1], rStr[2])
+                    newRecord.add("${rStr[0]} ${rStr[1]}")
+                }
+                "Leave" -> {
+                    newRecord.add("${rStr[0]} ${rStr[1]}")
+                }
+                else -> {   
+                    uidMap.put(rStr[1], rStr[2])
+                }
+            }
+        }
+        return convertRecordToResult(newRecord)
+    }
+
+    fun convertRecordToResult(r: ArrayList<String>): Array<String> {
+        val temp = ArrayList<String>()
+        val sb = StringBuilder("")
+        r.forEach{ v ->  
+                    val rec = v.split(" ")
+                    sb.append(uidMap.get(rec[1])).append(if(rec[0]=="Enter") "님이 들어왔습니다." else "님이 나갔습니다.")
+                    temp.add(sb.toString())
+                    sb.clear()
+        }
+        return temp.toTypedArray()
+    }
+}
