@@ -29,3 +29,20 @@ class Solution {
     }
 }
 
+/* 처음 Collection(List)방식 풀이 */
+class Solution {
+    fun solution(number: String, k: Int): String {
+        val sb = StringBuilder("")
+        var numStr = number
+        var limit = number.length - k           
+        while(limit-- > 0){
+            val temp = numStr.substring(0, numStr.length-limit).toList()
+            val max = if(temp.contains('9')) '9' else temp.max()
+            sb.append(max)
+            val idx = temp.indexOf(max)
+            numStr = numStr.substring(idx+1, numStr.length)
+            
+        }
+        return sb.toString()
+    }
+}
