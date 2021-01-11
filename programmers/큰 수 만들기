@@ -1,0 +1,31 @@
+// 처음엔 collection으로 풀었는데,
+// test case 10에서 시간초과 나서 array로 다시 풀이함
+class Solution {
+    fun solution(number: String, k: Int): String {
+        val sb = StringBuilder("")
+        var numStr = number
+        var limit = number.length - k           
+        while(limit-- > 0){
+            val size = numStr.length
+            val temp = numStr.substring(0, size-limit).toCharArray()
+            var max = '0'
+            var maxIdx = 0
+            for(i in 0 until size-limit) {
+                val num = temp[i]
+                if(num == '9') {
+                    max = num
+                    maxIdx = i
+                    break
+                }
+                if(num > max) {
+                    max = num
+                    maxIdx = i
+                }
+            }
+            sb.append(max)
+            numStr = numStr.substring(maxIdx + 1, numStr.length)
+        }
+        return sb.toString()
+    }
+}
+
