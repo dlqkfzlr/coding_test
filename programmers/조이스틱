@@ -1,0 +1,50 @@
+import kotlin.math.abs
+
+class Solution {
+    var check: BooleanArray = booleanArrayOf()
+    var minList: MutableList<Int> = mutableListOf()
+
+    fun solution(name: String): Int {
+        minList = MutableList(name.length) { 0 }
+        check = BooleanArray(name.length)
+
+        name.toCharArray()
+            .forEachIndexed { index, char ->
+            minList[index] = Math.min('Z' - char + 1, char - 'A')
+            if (minList[index] == 0) check[index] = true
+        }
+
+        var next = 0
+        var result = 0
+        while (check.count { it } != name.length) {
+            val (nextIndex: Int, nextDistance: Int) = dijkstra(next, name.length)
+            next = nextIndex
+            result += nextDistance + minList[nextIndex]
+
+        }
+
+        return result
+    }
+
+    fun dijkstra(start: Int, nameLength: Int): IntArray {
+        check[start] = true
+
+        var distance = IntArray(nameLength) { 0 }
+        var minIndex = 0
+        var minCount = Int.MAX_VALUE
+
+        for (i in 0 until nameLength) {
+            if (i == start || check[i]) continue
+            else {
+                distance[i] = Math.min(abs(i - start), start + nameLength - i)
+                if (minCount > distance[i]) {
+                    minCount = distance[i]
+                    minIndex = i
+                }
+            }
+        }
+
+        return if (minCount == Int.MAX_VALUE) intArrayOf(0, 0)
+        else intArrayOf(minIndex, minCount)
+    }
+}
