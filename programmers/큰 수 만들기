@@ -29,7 +29,10 @@ class Solution {
     }
 }
 
-/* 처음 Collection(List)방식 풀이 */
+/* 처음 Collection(List)방식 풀이 
+ * 하단의 모범답안을 보니 단순히 Collection 함수사용 때문이 아니라
+ * substring을 두번 사용했던 것이 시간초과의 원인이었음을 알 수 있다.
+ */
 class Solution {
     fun solution(number: String, k: Int): String {
         val sb = StringBuilder("")
@@ -44,5 +47,25 @@ class Solution {
             
         }
         return sb.toString()
+    }
+}
+
+/* 똑같이 Collection 함수를 사용했지만 통과된 풀이 */
+class Solution {
+    fun solution(number: String, k: Int): String {
+        var answer = ""
+        var stringSize = number.length - k
+        var index = 0
+        val list = mutableListOf<Char>()
+        while (stringSize > 0) {
+            val string = number.substring(index, number.length - (stringSize - 1))
+            string.max()?.let {max ->
+                index += string.indexOf(max) + 1
+                list.add(max)
+            }
+            stringSize -= 1
+        }
+        answer = list.joinToString("")
+        return answer
     }
 }
