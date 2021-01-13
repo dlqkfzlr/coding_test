@@ -1,0 +1,19 @@
+fun solution(A: IntArray): Int {
+    A.sort()
+    val size = A.size
+    for(i in 0 until size-1 step 2){
+        if(A[i] != A[i+1]){
+            return A[i]
+        }
+    }
+    return A[size-1]
+}
+
+/* 모범답안: 비트연산자 사용 */
+fun solution(A: IntArray): Int {
+    var result = 0; 
+    for(i in A.indices){ 
+        result = result xor A[i] 
+    } 
+    return result
+}
