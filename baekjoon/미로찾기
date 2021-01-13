@@ -1,0 +1,56 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.*
+
+lateinit var nm: List<Int>
+lateinit var matrix: Array<IntArray>
+lateinit var visited:  Array<IntArray>
+
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+
+    // 가로 세로
+    nm = readLine().split(" ").map { it.toInt() }
+    matrix = Array(nm[0]) { IntArray(nm[1]) }
+    visited = Array(nm[0]) { IntArray(nm[1]) }
+
+    for(n in 0 until nm[0]) {
+        readLine().toList().forEachIndexed { m, c ->  matrix[n][m] = c.toString().toInt() }
+    }
+
+    print(bfs(intArrayOf(0, 0), intArrayOf(nm[0] - 1, nm[1] - 1)))
+}
+
+fun bfs(sp: IntArray, ep: IntArray): Int {
+    val q: Queue<IntArray> = LinkedList<IntArray>()
+    q.offer(sp)
+    while (q.isNotEmpty()){
+        val (x, y) = q.poll()
+        val up = intArrayOf(x-1, y)
+        val down = intArrayOf(x+1, y)
+        val left = intArrayOf(x, y-1)
+        val right = intArrayOf(x, y+1)
+        // 상하좌우 이동
+        if (up[0] >= 0 && matrix[up[0]][up[1]] == 1 && visited[up[0]][up[1]] == 0) {
+            q.offer(up)
+            visited[up[0]][up[1]] = visited[x][y] + 1
+            if (up.contentEquals(ep))  break
+        }
+        if (down[0] <= ep[0] && matrix[down[0]][down[1]] == 1 && visited[down[0]][down[1]] == 0) {
+            q.offer(down)
+            visited[down[0]][down[1]] = visited[x][y] + 1
+            if (down.contentEquals(ep))  break
+        }
+        if (left[1] >= 0 && matrix[left[0]][left[1]] == 1 && visited[left[0]][left[1]] == 0) {
+            q.offer(left)
+            visited[left[0]][left[1]] = visited[x][y] + 1
+            if (left.contentEquals(ep))  break
+        }
+        if (right[1] <= ep[1] && matrix[right[0]][right[1]] == 1 && visited[right[0]][right[1]] == 0) {
+            q.offer(right)
+            visited[right[0]][right[1]] = visited[x][y] + 1
+            if (right.contentEquals(ep))  break
+        }
+    }
+
+    return visited[ep[0]][ep[1]] + 1
+}
