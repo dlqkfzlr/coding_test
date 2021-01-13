@@ -1,0 +1,10 @@
+fun solution(A: IntArray, K: Int): IntArray {
+    // write your code in Kotlin
+    val size = A.size
+    val temp = IntArray(size)
+    for(i in 0 until size){
+        temp[convertIndex(i + K, size)] = A[i]
+    }
+    return temp
+}
+fun convertIndex(n: Int, size: Int) = if(n > size - 1) n % size else n
