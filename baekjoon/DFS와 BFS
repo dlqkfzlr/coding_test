@@ -1,0 +1,51 @@
+lateinit var nmv: List<Int>
+lateinit var matrix: Array<IntArray>
+lateinit var visited: BooleanArray
+
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+
+    // nmv = [정점개수, 간선개수, 출발점]
+    nmv = readLine().split(" ")
+        .map { it.toInt() }
+    matrix = Array(nmv[0]) { IntArray(nmv[0]) }
+    visited = BooleanArray(nmv[0])
+
+    repeat(nmv[1]) {
+        val xy = readLine().split(" ")
+            .map { it.toInt() - 1 }
+        // xy[0], xy[1] : 두 정점의 번호 => idx로 만들려면 -1 해줘야함
+        matrix[xy[0]][xy[1]] = 1
+        matrix[xy[1]][xy[0]] = 1
+    }
+
+    val startIdx = nmv[2] - 1
+    dfs(startIdx)
+    println()
+    visited = BooleanArray(nmv[0])
+    bfs(startIdx)
+}
+
+fun dfs(v: Int) {
+    visited[v] = true
+    print("${v + 1} ")
+    for (i in 0 until nmv[0]) {
+        if (matrix[v][i] == 1 && !visited[i]) dfs(i)
+    }
+}
+
+fun bfs(v: Int) {
+    val q: Queue<Int> = LinkedList<Int>()
+    q.offer(v)
+    visited[v] = true
+    print("${v + 1} ")
+    while (!q.isEmpty()){
+        val node = q.poll()
+        for(i in 0 until nmv[0]){
+            if (matrix[node][i] == 1 && !visited[i]) {
+                q.offer(i)
+                visited[i] = true
+                print("${i + 1} ")
+            }
+        }
+    }
+}
