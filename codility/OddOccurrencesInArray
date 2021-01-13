@@ -9,7 +9,7 @@ fun solution(A: IntArray): Int {
     return A[size-1]
 }
 
-/* 모범답안: 비트연산자 사용 */
+/* 모범답안: 비트연산자(xor) 사용 */
 fun solution(A: IntArray): Int {
     var result = 0; 
     for(i in A.indices){ 
