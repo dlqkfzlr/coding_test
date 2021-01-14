@@ -11,7 +11,10 @@ class Solution {
     tailrec fun gcd (a: Int, b: Int): Int = if(b == 0) a else gcd(b, a % b)
 }
 
-/* 다른사람의 풀이 */
+/* 다른사람의 풀이;
+   그냥 단순하게 1부터 쭉 반복문으로 
+   배열의 원소들이 해당값을 모두 나누어 
+   떨어지게 하는 answer값을 찾는 로직 */
 class Solution {
     fun solution(arr: IntArray): Int {
         var answer = 1
