@@ -1,0 +1,28 @@
+class Solution {
+    fun solution(nums: IntArray): Int {
+        val combList = mutableListOf<List<Int>>()
+        val check = Array<Boolean>(nums.size) { false }
+        combination(combList, nums.toList(), check, 0, 3)
+        return combList.map { it.reduce { acc, i ->  acc+i} }.filter { checkPrimeNum(it) }.count()
+    }
+
+    fun combination(answer: MutableList<List<Int>>, el: List<Int>, ck: Array<Boolean>, start: Int, target: Int) {
+        if(target == 0) {
+            answer.addAll( listOf(el.filterIndexed { index, _ -> ck[index] }) )
+        } else {
+            for(i in start until el.size) {
+                ck[i] = true
+                combination(answer, el, ck, i + 1, target - 1)
+                ck[i] = false
+            }
+        }
+    }
+
+    fun checkPrimeNum(n: Int): Boolean {
+        val limit = n / 2
+        for(i in 2..limit) {
+            if(n % i == 0) return false
+        }
+        return true
+    }
+}
