@@ -10,3 +10,17 @@ class Solution {
 
     tailrec fun gcd (a: Int, b: Int): Int = if(b == 0) a else gcd(b, a % b)
 }
+
+/* 다른사람의 풀이 */
+class Solution {
+    fun solution(arr: IntArray): Int {
+        var answer = 1
+        while(true) {
+            var x = 0
+            for(a in arr) x += answer%a
+            if(x==0) return answer
+            answer++
+        }
+        return answer
+    }
+}
