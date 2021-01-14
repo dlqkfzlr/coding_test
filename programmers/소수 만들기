@@ -1,3 +1,4 @@
+/* 나의 답안 */
 class Solution {
     fun solution(nums: IntArray): Int {
         val combList = mutableListOf<List<Int>>()
@@ -24,5 +25,33 @@ class Solution {
             if(n % i == 0) return false
         }
         return true
+    }
+}
+
+/* 다른사람 풀이 */
+class Solution {
+    fun isPrime(n: Int): Boolean {
+        if(n<2)return false
+        else if(n<6){
+            if(n==4)
+            return false
+            else return true}
+        for (i in 2..Math.sqrt(n.toDouble()).toInt()){
+            if(n%i==0)return false
+        }
+        return true
+    }
+    fun solution(nums: IntArray): Int {
+        var answer = 0
+        for (i in 0..nums.size-3){
+            for(j in i+1..nums.size-2){
+                for(k in j+1..nums.size-1){           
+                    println(nums[i]+nums[j]+nums[k])
+                    if(isPrime(nums[i]+nums[j]+nums[k]))answer++
+                }
+            }
+        }
+
+        return answer
     }
 }
