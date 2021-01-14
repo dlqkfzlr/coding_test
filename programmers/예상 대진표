@@ -1,0 +1,25 @@
+import kotlin.math.*
+
+class Solution {
+    fun solution(n: Int, a: Int, b: Int): Int {
+        // –2,147,483,648 ~ 2,147,483,647
+        // 2^20: 1,048,576
+        val round = log2(n.toDouble()).toInt()
+        var big: Int
+        var small: Int
+        if(a > b) {
+            big = a
+            small = b
+        } else {
+            big = b
+            small = a
+        }
+        for(i in 1..round) {
+            if(big - small == 1 && big % 2 == 0) return i
+            big = if(big % 2 == 0) big / 2 else (big + 1) / 2
+            small = if(small % 2 == 0) small / 2 else (small + 1) / 2
+        }
+
+        return round
+    }
+}
