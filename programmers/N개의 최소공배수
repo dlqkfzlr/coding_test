@@ -1,0 +1,12 @@
+class Solution {
+    fun solution(arr: IntArray): Int {
+        val size = arr.size
+        var lcm = arr[0]
+        for(i in 1 until size){
+            lcm = lcm * arr[i] / gcd(lcm, arr[i])
+        }
+        return lcm
+    }
+
+    tailrec fun gcd (a: Int, b: Int): Int = if(b == 0) a else gcd(b, a % b)
+}
