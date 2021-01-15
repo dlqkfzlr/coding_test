@@ -1,0 +1,63 @@
+/*  [나의 풀이]
+    조합으로 부분집합 크기별 유일성 검사 => 통과시 superKeyList에 저장
+    containsAll로 superKeyList의 최소성 검사 => 통과시 candidateKeyList에 저장
+    return candidateKeyList개수
+*/
+class Solution {
+    fun solution(relation: Array<Array<String>>): Int {
+        val attSize = relation[0].size
+        val attList: MutableList<Int> = relation[0].mapIndexed{ idx, _ -> idx + 1 }.toMutableList()
+        val superKeyList = mutableListOf<List<Int>>()
+        for (i in 1..attSize){      // 유일성 체크
+            val result = mutableListOf<List<Int>>()
+            val check = Array<Boolean>(attList.size) { false }
+            combination(result, attList, check, 0, i)
+            val newCandidateList = result.filter { checkCandidate(it, relation) }
+            superKeyList.addAll(newCandidateList)
+        }
+        val superSize = superKeyList.count()
+        val candidateKeyList = mutableListOf<List<Int>>()
+        for (i in superSize-1 downTo 0){   // 사이즈가 큰애들부터 작은애들이 포함되어있는지 검사함
+            val element = superKeyList[i]
+            var isIncluded = false
+            for (j in 0 until i){
+                if (element.containsAll(superKeyList[j])) {
+                    isIncluded = true
+                    break
+                }
+            }
+            if (!isIncluded) candidateKeyList.add(element)
+        }
+        return candidateKeyList.count()
+    }
+
+    fun <T> combination(answer: MutableList<List<T>>, el: List<T>, ck: Array<Boolean>, start: Int, target: Int) {
+        if(target == 0) {
+            answer.addAll( listOf(el.filterIndexed { index, _ -> ck[index] }) )
+        } else {
+            for(i in start until el.size) {
+                ck[i] = true
+                combination(answer, el, ck, i + 1, target - 1)
+                ck[i] = false
+            }
+        }
+    }
+
+    fun checkCandidate(included: List<Int>, table: Array<Array<String>>): Boolean {
+        val rowSet = mutableSetOf<String>()
+        val sb = StringBuilder("")
+        for (row in table){
+            for(i in row.indices){
+                if (included.contains(i+1)) sb.append(row[i])
+            }
+            val newValue = sb.toString()
+            sb.clear()
+            if (!rowSet.contains(newValue)) {
+                rowSet.add(newValue)
+            } else {
+                break
+            }
+        }
+        return table.size == rowSet.size
+    }
+}
