@@ -1,0 +1,22 @@
+class Solution {
+    fun solution(n: Int, computers: Array<IntArray>): Int {
+        val check = BooleanArray(n){false}
+        var answer = 0
+
+        for (i in 0 until n){
+            if (check[i]) continue  
+            val temp = BooleanArray(n){false}
+            dfs(computers, temp, i)
+            temp.forEachIndexed { index, b -> if (b) check[index] = true }
+            answer++
+        }
+        return answer
+    }
+
+    fun dfs(graph: Array<IntArray>, visit:BooleanArray, start: Int) {
+        visit[start] = true
+        for(i in visit.indices){
+            if(graph[start][i] == 1 && !visit[i]) dfs(graph, visit, i)
+        }
+    }
+}
