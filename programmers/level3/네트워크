@@ -21,3 +21,32 @@ class Solution {
         }
     }
 }
+
+
+/* 다른사람의 풀이(BFS) */
+class Solution {
+    fun solution(n: Int, computers: Array<IntArray>): Int {
+        var answer = 0
+        val q=java.util.ArrayDeque<Int>()
+        val visit=BooleanArray(n)
+
+        for(i in 0 until n){
+            if(!visit[i]){
+                visit[i]=true
+                answer++
+                q.add(i)
+                while(!q.isEmpty()){
+                    val p=q.poll()
+                    for(j in 0 until n){
+                        if(p==j)    continue
+                        if(!visit[j]&&computers[p][j]==1){
+                            q.add(j)
+                            visit[j]=true
+                        }
+                    }
+                }   
+            } 
+        }     
+        return answer
+    }
+}
