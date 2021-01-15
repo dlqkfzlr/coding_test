@@ -1,7 +1,10 @@
 /*  [나의 풀이]
-    조합으로 부분집합 크기별 유일성 검사 => 통과시 superKeyList에 저장
+    조합으로 크기별 부분집합구하고 checkUnique로 유일성 검사 => 통과시 superKeyList에 저장
     containsAll로 superKeyList의 최소성 검사 => 통과시 candidateKeyList에 저장
     return candidateKeyList개수
+    
+    [개선점]
+    크기별 부분집합을 모두 구할거면 차라리 멱집합을 구한뒤에 일괄적으로 checkUnique로 유일성 검사를 했어도 됐음 (시간복잡도는 동일할듯)
 */
 class Solution {
     fun solution(relation: Array<Array<String>>): Int {
@@ -12,7 +15,7 @@ class Solution {
             val result = mutableListOf<List<Int>>()
             val check = Array<Boolean>(attList.size) { false }
             combination(result, attList, check, 0, i)
-            val newCandidateList = result.filter { checkCandidate(it, relation) }
+            val newCandidateList = result.filter { checkUnique(it, relation) }
             superKeyList.addAll(newCandidateList)
         }
         val superSize = superKeyList.count()
@@ -43,7 +46,7 @@ class Solution {
         }
     }
 
-    fun checkCandidate(included: List<Int>, table: Array<Array<String>>): Boolean {
+    fun checkUnique(included: List<Int>, table: Array<Array<String>>): Boolean {
         val rowSet = mutableSetOf<String>()
         val sb = StringBuilder("")
         for (row in table){
@@ -59,5 +62,48 @@ class Solution {
             }
         }
         return table.size == rowSet.size
+    }
+}
+
+/* 모범답안 */
+// 재귀를 사용하여 subKeys를 도출함
+class Solution {
+
+    data class Database(val records: List<Record>) {
+
+        fun getUniqueKeys(): Set<Key> {
+            val masterKey = Key(List(records.first().columns.size) { it }.toSet())
+            return findAllUniqueKeys(masterKey)
+        }
+
+        private fun findAllUniqueKeys(key: Key): Set<Key> {
+            return if (!definedUniquelyBy(key)) {
+                emptySet()
+            } else {
+                key.subKeys()
+                    .flatMap(::findAllUniqueKeys).toSet()
+                    .takeIf { it.isNotEmpty() } ?: setOf(key)
+            }
+        }
+
+        private fun definedUniquelyBy(key: Key): Boolean {
+            return records.groupBy { record ->
+                // pick only record's columns defined by key
+                record.columns.filterIndexed { index, _ -> index in key.columns }
+            }.size == records.size
+        }
+    }
+
+    data class Record(val columns: List<String>)
+
+    data class Key(val columns: Set<Int>) {
+
+        fun subKeys(): List<Key> = columns.map { Key(columns - it) }
+    }
+
+    fun solution(relation: Array<Array<String>>): Int {
+        return Database(relation.map {
+            Record(it.toList())
+        }).getUniqueKeys().size
     }
 }
