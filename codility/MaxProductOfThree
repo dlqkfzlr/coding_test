@@ -1,0 +1,7 @@
+import kotlin.math.*
+
+fun solution(A: IntArray): Int {
+    A.sort()
+    val size = A.count()
+    return max(A[size-1] * A[size-2] * A[size-3], A[size-1] * A[1] * A[0])
+}
