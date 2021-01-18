@@ -1,0 +1,49 @@
+class Solution {
+    fun solution(s: String): Int {
+        val size = s.count()
+        var minLength = size
+        for(i in 1.. size/2){
+            val length = countZipString(s, i)
+            if(length < minLength) minLength = length
+        }
+        return minLength
+    }
+    
+    fun countZipString(s: String, cut: Int): Int {
+        val size = s.count()
+        val trial = size / cut
+        val lastCut = size % cut
+        var startIdx = 0
+        var count = 1
+        var prevStr = ""
+        var result = StringBuilder("")
+        for(i in 1..trial){
+            val curStr = s.substring(cut * (i-1), cut * i)
+            if(curStr == prevStr){
+                count++
+            } else {
+                if(!prevStr.isEmpty()){
+                    result.append(if(count == 1) "" else count).append(prevStr)    
+                }
+                if(i == trial) {
+                    
+                }
+                prevStr = curStr
+                count = 1
+            }
+        }
+        if(lastCut != 0){
+            val lastStr = s.substring(cut * trial, size)
+            if(lastStr == prevStr){
+                count++
+                result.append(count).append(prevStr)
+            } else {
+                result.append(if(count == 1) "" else count).append(prevStr).append(lastStr)    
+            }
+        } else {
+           result.append(if(count == 1) "" else count).append(prevStr)    
+        }
+        return result.toString().count()
+    }
+    
+}
