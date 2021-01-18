@@ -1,0 +1,13 @@
+class Solution {
+    fun solution(array: IntArray, commands: Array<IntArray>): IntArray {
+        var answer = IntArray(commands.count())
+        for(i in commands.indices){
+            val command = commands[i]
+            val temp = array.copyOfRange(command[0]-1, command[1])
+            temp.sort()
+            answer[i] = temp[command[2]-1]
+        }
+
+        return answer
+    }
+}
