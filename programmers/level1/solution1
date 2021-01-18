@@ -1,0 +1,9 @@
+class Solution {
+    fun solution(arr: IntArray): IntArray {
+        val size = arr.count()
+        if(size == 1) return intArrayOf(-1)
+        val temp = arr.toList()
+        val minValue = temp.min()
+        return temp.filter{ v -> v != minValue }.toIntArray()
+    }
+}
