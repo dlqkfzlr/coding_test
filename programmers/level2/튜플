@@ -63,3 +63,43 @@ class Solution {
             .toIntArray()
     }
 }
+
+/* 레벨테스트 때 풀이한 내용 */
+/* Comparable 없이 그냥 sortedBy 함수를 이용하면됐었다. */
+/* fold, union의 사용법에 대해 무지했음 (추가공부 필요) */
+class Solution {
+    fun solution(s: String): IntArray {
+
+        val temp = s.substring(2, s.count()-2).split("},{").sortedWith(comparator).map{
+            v -> v.split(",")
+        }
+        val size = temp.count()
+        var answer = IntArray(size)
+        var prevSubset: List<Char>
+        for(i in temp.indices){
+            if(i == 0){
+                answer[i] = temp[0][0].toInt()
+            } else {
+                val nextSub = temp[i]
+                val sub = temp[i-1]
+                for(j in nextSub.indices){
+                    if(!sub.contains(nextSub[j])){
+                        answer[i] = nextSub[j].toString().toInt()
+                        break
+                    }
+                }
+            }
+
+        }
+
+        return answer
+    }
+
+    val comparator =  Comparator<String> { a, b ->
+            when {
+                (a.count() == b.count()) -> 0
+                (a.count() < b.count()) -> -1
+                else -> 1
+            }
+        }
+}
