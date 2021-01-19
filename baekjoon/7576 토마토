@@ -1,0 +1,80 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.*
+
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+
+    // 가로 세로
+    val input = readLine().toString().split(" ")
+    val w = input[0].toInt() + 2
+    val h = input[1].toInt() + 2
+    val matrix = Array(h) { IntArray(w) }
+    val startList = mutableListOf<Pair<Int, Int>>()
+    var unmatureCnt = 0
+    matrix[0] = IntArray(w){ - 1}
+    for (i in 1 until h - 1) {
+        val temp = readLine().toString().split(" ")
+        for (j in 0 until w) {
+            matrix[i][j] = if (j == 0 || j == w-1){
+                -1
+            } else {
+                val v = temp[j-1].toInt()
+                when (v) {
+                    1 -> {
+                        startList.add(Pair(i, j))
+                    }
+                    0 -> {
+                        unmatureCnt++
+                    }
+                }
+                v
+            }
+        }
+    }
+    matrix[h-1] = IntArray(w){ - 1}
+
+    /*for (i in matrix.indices){
+        println(matrix[i].joinToString())
+    }*/
+
+    println(if (unmatureCnt == 0) 0 else bfs(startList, matrix, Pair(h, w)))
+}
+
+// 이 문제는 최소 날짜는 구하는 문제이므로 BFS로 접근해야함
+// 단, 출발점이 여러개이므로 동시에 출발점마다 BFS를 진행함
+fun bfs(start: List<Pair<Int, Int>>, graph: Array<IntArray>, limit: Pair<Int, Int>): Int {
+    val que: Queue<Pair<Int, Int>> = LinkedList<Pair<Int, Int>>()
+    start.forEach {
+        que.offer(it)
+    }
+    while (que.isNotEmpty()) {
+        // bfs진행
+        val (p, q) = que.poll()
+        val visitCnt = graph[p][q]
+        if (graph[p - 1][q] == 0) {
+            graph[p - 1][q] = visitCnt + 1
+            que.offer(Pair(p - 1, q))
+        }
+        if (graph[p][q - 1] == 0) {
+            graph[p][q - 1] = visitCnt + 1
+            que.offer(Pair(p, q - 1))
+        }
+        if (graph[p + 1][q] == 0) {
+            graph[p + 1][q] = visitCnt + 1
+            que.offer(Pair(p + 1, q))
+        }
+        if (graph[p][q + 1] == 0) {
+            graph[p][q + 1] = visitCnt + 1
+            que.offer(Pair(p, q + 1))
+        }
+    }
+    var maxVisit = 0
+    for (i in graph.indices){
+        for (j in graph[i].indices){
+            val v = graph[i][j]
+            if (v == 0) return -1
+            if (v > maxVisit) maxVisit = v
+        }
+    }
+    return maxVisit - 1
+}
