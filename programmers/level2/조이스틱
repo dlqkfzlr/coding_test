@@ -1,3 +1,5 @@
+/* 이 문제는 사실 dijkstra로 풀면 반례가 있는 문제 */
+
 import kotlin.math.abs
 
 class Solution {
