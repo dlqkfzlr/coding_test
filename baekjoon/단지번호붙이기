@@ -20,7 +20,7 @@ fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
 
 }
 
-fun searchVillage(graph: Array<IntArray>/*, visited: Array<IntArray>*/, limit: Int): List<Int> {
+fun searchVillage(graph: Array<IntArray>, limit: Int): List<Int> {
     var p = Pair(0, 0)
     val vList = mutableListOf<Int>()
 
@@ -38,7 +38,7 @@ fun searchVillage(graph: Array<IntArray>/*, visited: Array<IntArray>*/, limit: I
 }
 
 fun bfs(
-    graph: Array<IntArray>/*, visited: Array<IntArray>*/,
+    graph: Array<IntArray>,
     start: Pair<Int, Int>,
     limit: Int
 ): Int {
@@ -79,7 +79,7 @@ fun bfs(
     return apartmentCount
 }
 
-fun move(node: Pair<Int, Int>, limit: Int, d: Char): Pair<Int, Int> {
+fun move(node: Pair<Int, Int>, d: Char): Pair<Int, Int> {
     val a = node.first
     val b = node.second
     return when (d) {
