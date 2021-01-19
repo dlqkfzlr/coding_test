@@ -1,6 +1,6 @@
 class Solution {
     fun solution(a: IntArray): Int {
-        // 적어도 한번은 두 element 중 하나를 선택해서 터트릴수 있기 때문에 리스트의 양끝은 항상 남을 수 있음
+        // 적어도 한번은 두 element 중 하나를 선택해서 터트릴수 있기 때문에, 리스트의 양끝은 항상 남을 수 있음
         // 한 element 기준 좌우통합 최소값보다 해당 element가 작다면 항상 남을 수 있음
         var answer = 0
         var left = Int.MAX_VALUE
