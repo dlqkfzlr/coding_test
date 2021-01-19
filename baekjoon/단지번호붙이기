@@ -1,0 +1,105 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.*
+
+lateinit var visited: Array<IntArray>
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+
+    val size = readLine().toInt()
+    val matrix = Array(size) { IntArray(size) }
+    visited = Array(size) { IntArray(size) { 0 } }
+    for (i in 0 until size) {
+        val temp = readLine().toList()
+        for (j in temp.indices) {
+            matrix[i][j] = temp[j].toInt() - 48
+        }
+    }
+    val result = searchVillage(matrix/*, visited*/, size)
+    println(result.count())
+    result.forEach { println(it) }
+
+}
+
+fun searchVillage(graph: Array<IntArray>/*, visited: Array<IntArray>*/, limit: Int): List<Int> {
+    var p = Pair(0, 0)
+    val vList = mutableListOf<Int>()
+
+    while (p != Pair(limit, limit)) {
+        val x = p.first
+        val y = p.second
+        if (graph[x][y] == 1 && visited[x][y] != 1) {
+            val result = bfs(graph/*, visited*/, Pair(x, y), limit)
+            vList.add(result)
+        }
+        p = next(p, limit)
+    }
+    vList.sort()
+    return vList
+}
+
+fun bfs(
+    graph: Array<IntArray>/*, visited: Array<IntArray>*/,
+    start: Pair<Int, Int>,
+    limit: Int
+): Int {
+    val queue: Queue<Pair<Int, Int>> = LinkedList<Pair<Int, Int>>()
+    var apartmentCount = 1
+    queue.offer(start)
+    val x = start.first
+    val y = start.second
+    visited[x][y] = 1
+    while (queue.isNotEmpty()) {
+        val node = queue.poll()
+        // 사방체크
+        val (l1, l2) = move(node, limit, 'L')
+        val (d1, d2) = move(node, limit, 'D')
+        val (r1, r2) = move(node, limit, 'R')
+        val (u1, u2) = move(node, limit, 'U')
+        if (l2 >= 0 && graph[l1][l2] == 1 && visited[l1][l2] == 0) {
+            visited[l1][l2] = 1
+            queue.offer(Pair(l1, l2))
+            apartmentCount++
+        }
+        if (d1 < limit &&graph[d1][d2] == 1 && visited[d1][d2] == 0) {
+            visited[d1][d2] = 1
+            queue.offer(Pair(d1, d2))
+            apartmentCount++
+        }
+        if (r2 < limit && graph[r1][r2] == 1 && visited[r1][r2] == 0) {
+            visited[r1][r2] = 1
+            queue.offer(Pair(r1, r2))
+            apartmentCount++
+        }
+        if (u1 >= 0 && graph[u1][u2] == 1 && visited[u1][u2] == 0) {
+            visited[u1][u2] = 1
+            queue.offer(Pair(u1, u2))
+            apartmentCount++
+        }
+    }
+    return apartmentCount
+}
+
+fun move(node: Pair<Int, Int>, limit: Int, d: Char): Pair<Int, Int> {
+    val a = node.first
+    val b = node.second
+    return when (d) {
+        'L' -> Pair(a, b - 1)
+        'D' -> Pair(a + 1, b)
+        'R' -> Pair(a, b + 1)
+        else-> Pair(a - 1, b)
+    }
+}
+
+fun next(node: Pair<Int, Int>, limit: Int): Pair<Int, Int> {
+    val a = node.first
+    val b = node.second
+    return if (b >= limit - 1) {
+        if (a >= limit - 1) {
+            Pair(limit, limit)    // 종료
+        } else {
+            Pair(a + 1, 0)
+        }
+    } else {
+        Pair(a, b + 1)
+    }
+}
