@@ -1,0 +1,33 @@
+class Solution {
+    fun solution(a: IntArray): Int {
+        // 적어도 한번은 두 element 중 하나를 선택해서 터트릴수 있기 때문에 리스트의 양끝은 항상 남을 수 있음
+        // 한 element 기준 좌우통합 최소값보다 해당 element가 작다면 항상 남을 수 있음
+        var answer = 0
+        var left = Int.MAX_VALUE
+        var right = Int.MAX_VALUE
+        val size = a.count()
+        var map = Array(size){IntArray(2)}
+        for (i in 0 until size){
+            if (left > a[i]){
+                left = a[i]
+            }
+            map[i][0] = left
+        }
+
+        for (i in size-1 downTo 0){
+            if (right > a[i]){
+                right = a[i]
+            }
+            map[i][1] = right
+        }
+
+        for (i in 0 until size){
+            if (a[i] <= map[i][0] || a[i] <= map[i][1]){
+                answer++
+            }
+        }
+
+        return answer
+    }
+
+}
