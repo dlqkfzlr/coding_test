@@ -1,0 +1,36 @@
+import java.util.*
+
+class Solution{
+    lateinit var map: Array<ArrayList<Int>>
+    lateinit var visit: IntArray
+    fun solution(n: Int, edge: Array<IntArray>): Int {
+        map = Array(n){ arrayListOf<Int>() }
+        for (i in edge.indices){
+            val a = edge[i][0] - 1
+            val b = edge[i][1] - 1
+            map[a].add(b)
+            map[b].add(a)
+        }
+        visit = IntArray(n)
+
+        bfs(0, n)
+        val max = visit.max()
+
+        return visit.count { it == max }
+    }
+
+    fun bfs(start: Int, size: Int){
+        val que = LinkedList<Int>()
+        que.offer(start)
+        visit[start] = 1
+        while (!que.isEmpty()){
+            val node = que.poll()
+            for (i in map.indices){
+                if (visit[i] == 0 && map[node].contains(i)){
+                    visit[i] = visit[node] + 1
+                    que.offer(i)
+                }
+            }
+        }
+    }
+}
