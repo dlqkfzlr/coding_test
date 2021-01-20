@@ -1,0 +1,43 @@
+import java.util.*
+
+class Solution {
+    lateinit var visit: IntArray
+    fun solution(begin: String, target: String, words: Array<String>): Int {
+        val size = words.count()
+        val wordSize = begin.count()
+        visit = IntArray(size + 1)
+        val newWords = Array(size + 1){ if (it != 0) words[it-1] else begin }
+        if (!words.contains(target)) return 0
+        return bfs(begin, target, newWords, wordSize)
+    }
+
+    fun bfs(start: String, target: String, words: Array<String>, wordSize: Int): Int {
+        val que = LinkedList<String>()
+        val size = words.count()
+        que.offer(start)
+        visit[0] = 0
+        while (!que.isEmpty()){
+            val word = que.poll()
+            val wordIdx = words.indexOf(word)
+            for (i in 0 until size){
+                if (visit[i] == 0 && checkOneDiff(word.toMutableList(), words[i].toMutableList(), wordSize)){
+                    if (words[i] == target) return visit[wordIdx] + 1
+                    visit[i] = visit[wordIdx] + 1
+                    que.offer(words[i])
+                }
+            }
+        }
+        return 0    // 마지막까지 변환 못함
+    }
+
+    fun checkOneDiff(s1: MutableList<Char>, s2: MutableList<Char>, wordSize: Int): Boolean {
+        var count = 0
+        for (i in 0 until wordSize){
+            if (s2.contains(s1[i])) {
+                count++
+                s2.remove(s1[i])
+            }
+        }
+        return wordSize - count == 1
+    }
+}
