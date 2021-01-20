@@ -1,7 +1,9 @@
 import java.util.*
 
 class Solution{
-    lateinit var map: Array<ArrayList<Int>>
+    // matrix형식으로 Array<IntArray>형식으로 하면 메모리 초과 발생함
+    // 그래서 내부 타입인자를 ArrayList<Int>로 변경해서 
+    lateinit var map: Array<ArrayList<Int>>     
     lateinit var visit: IntArray
     fun solution(n: Int, edge: Array<IntArray>): Int {
         map = Array(n){ arrayListOf<Int>() }
@@ -13,6 +15,8 @@ class Solution{
         }
         visit = IntArray(n)
 
+        // 1번에서 시작해서 BFS로 진행해 나감
+        // visit에서 가장 큰값 개수가 return값임
         bfs(0, n)
         val max = visit.max()
 
@@ -26,6 +30,8 @@ class Solution{
         while (!que.isEmpty()){
             val node = que.poll()
             for (i in map.indices){
+                // map을 순회하며 node와 연결된 Edge를 찾고
+                // 해당 Edge로 이동 & visited체크
                 if (visit[i] == 0 && map[node].contains(i)){
                     visit[i] = visit[node] + 1
                     que.offer(i)
