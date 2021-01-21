@@ -1,4 +1,5 @@
-/* 이 문제는 사실 dijkstra로 풀면 반례가 있는 문제 */
+/* 이 문제는 사실 dijkstra(탐욕법)로 풀면 반례가 있는 문제 
+   즉, 프로그래머스의 카테고리 분류 오류임                */
 
 import kotlin.math.abs
 
