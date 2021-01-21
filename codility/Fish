@@ -1,0 +1,35 @@
+import java.util.*
+
+fun solution(A: IntArray, B: IntArray): Int {
+    val answer = mutableListOf<Int>()
+    val up = LinkedList<Int>()
+    val down = LinkedList<Int>()
+    val total = B.count()
+    val temp = B.count { it==0 }
+    if (temp == total || temp == 0) return total    // 모두 같은 방향일 경우
+    
+    for (i in 0 until total){
+        if (B[i] == 0) {
+            up.offer(i)   // 하류에서 상류 방향
+        } else {
+            down.offer(i)
+        }
+    }
+    while (!down.isEmpty() && !up.isEmpty()){
+        val upFish = up.peek()
+        val downFish = down.peek()
+        if (downFish < upFish){ // 싸움
+            if (A[downFish] < A[upFish]){
+                down.poll()
+            } else {
+                up.poll()
+            }
+        } else {
+            answer.add(up.poll())
+        }
+    }
+    if (!down.isEmpty()) answer.addAll(down)
+    if (!up.isEmpty()) answer.addAll(up)
+
+    return answer.count()
+}
