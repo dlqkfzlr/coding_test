@@ -1,5 +1,6 @@
 import java.util.*
 
+
 fun solution(S: String): Int {  // stack 풀이
     if (S.isEmpty()) return 1
     val stack = Stack<Char>()
@@ -9,12 +10,10 @@ fun solution(S: String): Int {  // stack 풀이
             stack.push(S[i])
         } else {
             when(S[i]){
-                '(' -> if (stack.peek() != ')') stack.push(S[i]) else stack.pop()
-                '{' -> if (stack.peek() != '}') stack.push(S[i]) else stack.pop()
-                '[' -> if (stack.peek() != ']') stack.push(S[i]) else stack.pop()
-                ')' -> if (stack.peek() != '(') stack.push(S[i]) else stack.pop()
-                '}' -> if (stack.peek() != '{') stack.push(S[i]) else stack.pop()
-                ']' -> if (stack.peek() != '[') stack.push(S[i]) else stack.pop()
+                '(', '{', '[' -> stack.push(S[i])
+                ')' -> if (stack.peek() == '(') stack.pop()
+                '}' -> if (stack.peek() == '{') stack.pop()
+                ']' -> if (stack.peek() == '[') stack.pop()
             }
         }
     }
