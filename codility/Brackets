@@ -1,0 +1,22 @@
+import java.util.*
+
+fun solution(S: String): Int {  // stack 풀이
+    if (S.isEmpty()) return 1
+    val stack = Stack<Char>()
+    val size = S.length
+    for (i in 0 until size){
+        if (stack.isEmpty()) {
+            stack.push(S[i])
+        } else {
+            when(S[i]){
+                '(' -> if (stack.peek() != ')') stack.push(S[i]) else stack.pop()
+                '{' -> if (stack.peek() != '}') stack.push(S[i]) else stack.pop()
+                '[' -> if (stack.peek() != ']') stack.push(S[i]) else stack.pop()
+                ')' -> if (stack.peek() != '(') stack.push(S[i]) else stack.pop()
+                '}' -> if (stack.peek() != '{') stack.push(S[i]) else stack.pop()
+                ']' -> if (stack.peek() != '[') stack.push(S[i]) else stack.pop()
+            }
+        }
+    }
+    return if (stack.isEmpty()) 1 else 0
+}
