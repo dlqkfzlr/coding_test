@@ -1,0 +1,82 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
+lateinit var stack: IntStack
+fun main() = with(BufferedReader(InputStreamReader(System.`in`)))  {
+    val trial = readLine().toInt()
+    stack = IntStack(10000)
+    repeat(trial) {
+        operation(readLine().toString())
+    }
+}
+
+fun operation(s: String) {
+    val tmp = s.split(" ")
+    when(tmp[0]) {
+        "push" -> {
+            stack.push(tmp[1].toInt())
+        }
+        "pop" -> {
+            println(stack.pop())
+        }
+        "size" -> {
+            println(stack.size())
+        }
+        "empty" -> {
+            println(stack.empty())
+        }
+        "top" -> {
+            println(stack.top())
+        }
+        else -> {
+
+        }
+    }
+}
+
+class IntStack(capacity: Int, var ptr: Int = 0, max: Int = capacity): StackInterface {
+    lateinit var stk: IntArray
+    init {
+        try {
+            stk = IntArray(max)
+        } catch (e: OutOfMemoryError){
+            e.printStackTrace()
+        }
+    }
+
+    override fun pop(): Int {
+        return if (ptr <= 0){
+            -1
+        } else {
+            stk[--ptr]
+        }
+    }
+
+    override fun push(item: Int) {
+        stk[ptr++] = item
+    }
+
+    override fun size(): Int {
+        return ptr
+    }
+
+    override fun empty(): Int {
+        return if (ptr <= 0) 1 else 0
+    }
+
+    override fun top(): Int {
+        return if (ptr <= 0){
+            -1
+        } else {
+            stk[ptr - 1]
+        }
+    }
+}
+
+interface StackInterface {
+    fun pop(): Int
+    fun push(item: Int)
+    fun size(): Int
+    fun empty(): Int
+    fun top(): Int
+}
