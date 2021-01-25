@@ -1,0 +1,60 @@
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+import java.util.*
+import kotlin.collections.ArrayList
+
+lateinit var distArr: IntArray
+lateinit var nodeArr: Array<ArrayList<Node>>
+lateinit var que: PriorityQueue<Node>
+const val INF = Int.MAX_VALUE
+fun main() {
+    val br = BufferedReader(InputStreamReader(System.`in`))
+    val bw = BufferedWriter(OutputStreamWriter(System.out))
+
+    val n = br.readLine().toInt()
+    val m = br.readLine().toInt()
+    nodeArr = Array(n) { ArrayList() }
+    distArr = IntArray(n) { INF }
+    for (i in 0 until m) {
+        val temp = br.readLine().split(" ").map { it.toInt() }
+        nodeArr[temp[0] - 1].add(Node(temp[1] - 1, temp[2]))
+    }
+    val direction = br.readLine().split(" ").map { it.toInt() }
+    val startIdx = direction[0] - 1
+    val finishIdx = direction[1] - 1
+    distArr[startIdx] = 0
+    val startNode = Node(startIdx, 0)
+
+    // 다익스트라
+    dijkstra(startNode)
+
+    // distArr[finishIdx]를 출력
+    bw.write(distArr[finishIdx].toString())
+    bw.flush()
+    bw.close()
+}
+
+fun dijkstra(start: Node){
+    que = PriorityQueue()
+    que.offer(start)
+    while (!que.isEmpty()){
+        val curNode = que.poll()
+        val curIdx = curNode.idx
+        val curDist = curNode.dist
+
+        for (i in 0 until nodeArr[curIdx].size){
+            val nextIdx = nodeArr[curIdx][i].idx
+            val nextDist = nodeArr[curIdx][i].dist + curDist
+            if (nextDist < distArr[nextIdx]) {
+                distArr[nextIdx] = nextDist
+                que.offer(Node(nextIdx, nextDist))
+            }
+        }
+    }
+}
+
+data class Node(val idx: Int, val dist: Int) : Comparable<Node> {
+    override fun compareTo(other: Node): Int = dist - other.dist
+}
