@@ -1,0 +1,78 @@
+import java.io.*
+import java.util.*
+import kotlin.collections.ArrayList
+
+private lateinit var arr: ArrayList<ArrayList<Node>>
+private lateinit var dist: IntArray
+private lateinit var vis: BooleanArray
+private val queue = PriorityQueue<Node>()
+private const val INF = Int.MAX_VALUE
+
+fun main() {
+    val br = BufferedReader(InputStreamReader(System.`in`))
+    val bw = BufferedWriter(OutputStreamWriter(System.out))
+
+    val total = br.readLine().split(" ").map { it.toInt() }
+    val n = total[0]
+    val e = total[1]
+
+    arr = ArrayList()
+
+    for (i in 0 until n) arr.add(ArrayList())
+
+    dist = IntArray(n) { INF }
+    vis = BooleanArray(n)
+
+    val k = br.readLine().toInt() - 1   // startPoint
+
+    for (i in 0 until e) {
+        val info = br.readLine().split(" ").map { it.toInt() }
+        val u = info[0] - 1
+        val v = info[1] - 1
+        val w = info[2]
+        arr[u].add(Node(v, w ))
+    }
+
+    dijkstra(k)
+
+    dist.forEach {
+        if (it == INF) {
+            bw.write("INF")
+            bw.write("\n")
+        } else {
+            bw.write(it.toString())
+            bw.write("\n")
+        }
+    }
+    bw.flush()
+    bw.close()
+}
+
+fun dijkstra(start: Int) {
+    dist[start] = 0 // 시작 거리는 0
+    queue.add(Node(start, 0)) // 시작 노드를 큐에 넣어줍니다
+
+    while (!queue.isEmpty()) {
+        val curIndex = queue.peek().index  // 현재 노드 인덱스
+        val curDist = queue.peek().dist  // 현재 노드까지의 거리
+        queue.poll()
+
+        if (dist[curIndex] < curDist) continue // 탐색 시간을 줄이기 위해
+        // 현재 거리가 현재 노드까지의 거리보다 작으면 탐색 중단
+
+        for (i in 0 until arr[curIndex].size) { // 연결된 노드들 탐색
+            val nextIndex = arr[curIndex][i].index
+            val nextDist = curDist + arr[curIndex][i].dist
+
+            if (nextDist < dist[nextIndex]) {
+                dist[nextIndex] = nextDist
+                queue.add(Node(nextIndex, nextDist))
+            }
+
+        }
+    }
+}
+
+data class Node(val index: Int, val dist: Int) : Comparable<Node> {
+    override fun compareTo(other: Node): Int = dist-other.dist
+}
