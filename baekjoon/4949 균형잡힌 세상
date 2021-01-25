@@ -1,0 +1,25 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.*
+
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+    while (true){
+        val temp = readLine().toString()
+        if (temp == ".") break
+        val ps = temp.filter { it == '(' || it == '[' || it == ')' || it == ']' }
+        println(checkBalancedSentence(ps))
+    }
+}
+
+fun checkBalancedSentence(s: String): String {
+    val stack = Stack<Char>()
+    for (i in s.indices) {
+        when(s[i]){
+            '(' -> stack.push('(')
+            '[' -> stack.push('[')
+            ')' -> if (!stack.isEmpty() && stack.peek() == '(') stack.pop() else stack.push(')')
+            else -> if (!stack.isEmpty() && stack.peek() == '[') stack.pop() else stack.push(']')
+        }
+    }
+    return if(stack.isEmpty()) "yes" else "no"
+}
