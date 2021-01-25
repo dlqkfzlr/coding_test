@@ -4,7 +4,6 @@ import kotlin.collections.ArrayList
 
 private lateinit var arr: ArrayList<ArrayList<Node>>
 private lateinit var dist: IntArray
-private lateinit var vis: BooleanArray
 private val queue = PriorityQueue<Node>()
 private const val INF = Int.MAX_VALUE
 
@@ -20,8 +19,7 @@ fun main() {
 
     for (i in 0 until n) arr.add(ArrayList())
 
-    dist = IntArray(n) { INF }
-    vis = BooleanArray(n)
+    dist = IntArray(n) { INF }  // 출발점에서 해당노드까지의 최단거리 저장하는 배열
 
     val k = br.readLine().toInt() - 1   // startPoint
 
@@ -53,16 +51,23 @@ fun dijkstra(start: Int) {
     queue.add(Node(start, 0)) // 시작 노드를 큐에 넣어줍니다
 
     while (!queue.isEmpty()) {
-        val curIndex = queue.peek().index  // 현재 노드 인덱스
-        val curDist = queue.peek().dist  // 현재 노드까지의 거리
+        println("현재queue: ${queue.joinToString()}")
+        val curNode = queue.peek()      // 현재노드: 트리에서 가장 멀리 위치한 노드 (우선순위Queue이기 때문에 peek하면 dist가 가장 큰 node가 보여짐)
+        val curIndex = curNode.index  // curNode의 인덱스
+        val curDist = curNode.dist  // 출발점에서 curNode까지의 거리 (DP로 저장되는 값)
         queue.poll()
+        println("curNode: ${curNode}")
+        println("dist[${curIndex}]: ${dist[curIndex]}")
 
-        if (dist[curIndex] < curDist) continue // 탐색 시간을 줄이기 위해
-        // 현재 거리가 현재 노드까지의 거리보다 작으면 탐색 중단
+        // dist[curIndex]: 출발점에서 curNode까지의 최단거리
+        // curDist: DP로 저장된 curNode까지의 최단거리
+        // 탐색 시간을 줄이기 위해
+        // 최단거리가 DP로 저장한 값보다 작다면 넘어감
+        if (dist[curIndex] < curDist) continue
 
-        for (i in 0 until arr[curIndex].size) { // 연결된 노드들 탐색
+        for (i in 0 until arr[curIndex].size) { // 현재노드와 인접한 노드들 탐색
             val nextIndex = arr[curIndex][i].index
-            val nextDist = curDist + arr[curIndex][i].dist
+            val nextDist = curDist + arr[curIndex][i].dist // = curNode를 거쳐서 인접노드로 가는 최단 거리값
 
             if (nextDist < dist[nextIndex]) {
                 dist[nextIndex] = nextDist
