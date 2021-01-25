@@ -1,0 +1,23 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.*
+
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+    val size = readLine().toInt()
+    val answer = IntArray(size) { 0 }
+    val numList = readLine().toString().split(" ").map { it.toInt() }
+    val idxStack = Stack<Int>()
+    idxStack.push(0)
+    for (i in 1 until size){
+        while (!idxStack.isEmpty() && numList[idxStack.peek()] < numList[i]){
+            answer[idxStack.pop()] = numList[i]
+        }
+        idxStack.push(i)
+    }
+    if (!idxStack.isEmpty()){
+        while (!idxStack.isEmpty()){
+            answer[idxStack.pop()] = -1
+        }
+    }
+    println(answer.joinToString(" "))
+}
