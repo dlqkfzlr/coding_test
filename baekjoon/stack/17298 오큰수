@@ -2,6 +2,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
 
+/* 이 문제의 포인트는 stack에 값을 넣는것이 아닌 인덱스를 넣어서 처리하여 시간복잡도를  것 */
 fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
     val size = readLine().toInt()
     val answer = IntArray(size) { 0 }
