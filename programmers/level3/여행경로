@@ -1,0 +1,67 @@
+/* 모범답안 참고한 풀이 */
+class Solution {
+    lateinit var visited: BooleanArray
+    lateinit var pathList: MutableList<String>
+    fun solution(tickets: Array<Array<String>>): Array<String> {
+        pathList = mutableListOf<String>()
+        val start = "ICN"
+        visited = BooleanArray(tickets.size)
+        var count = 0
+        dfs(count, start, start, tickets)
+        return pathList.sorted().first().split(",").toTypedArray()
+    }
+
+    fun dfs(count: Int, start: String, answer: String, tickets: Array<Array<String>>) {
+        if (count >= tickets.size) {
+            pathList.add(answer)
+            return
+        }
+
+        for (i in tickets.indices) {
+            if (tickets[i][0] == start && !visited[i]) {
+                visited[i] = true
+                dfs(count + 1, tickets[i][1], answer+",${tickets[i][1]}", tickets)
+                visited[i] = false
+            }
+        }
+    }
+}
+
+/* 나의 풀이: 4개 중 1번 케이스 통과 못함*/
+class Solution {
+    lateinit var graph: MutableList<Direction>
+    lateinit var pathList: MutableList<String>
+    fun solution(tickets: Array<Array<String>>): Array<String> {
+        pathList = mutableListOf<String>()
+        val start = "ICN"
+        graph = mutableListOf()
+        val limit = tickets.count()
+        for (i in tickets.indices) {
+            graph.add(Direction(tickets[i][0], tickets[i][1]))
+        }
+        for (i in tickets.indices) {
+            if (tickets[i][0] == start) {
+                val visit = Array<Boolean>(limit) { false }
+                dfs(i, start, visit, 1, limit)
+            }
+        }
+        return pathList.sorted().first().split(",").toTypedArray()
+    }
+
+    fun dfs(idx: Int, path: String, visit: Array<Boolean>, cnt: Int, limit: Int) {
+        val arrival = graph[idx].toCity
+        visit[idx] = true
+        if (cnt >= limit) {
+            val newPath = path + ",${arrival}"
+            pathList.add(newPath.toString())
+        } else {
+            for (i in graph.indices) {
+                if (graph[i].fromCity == arrival && !visit[i]) {
+                    val newPath = path + ",${arrival}"
+                    dfs(i, newPath, visit, cnt + 1, limit)
+                }
+            }
+            visit[idx] = false
+        }
+    }
+}
