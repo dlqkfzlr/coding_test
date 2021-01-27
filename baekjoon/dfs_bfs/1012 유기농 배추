@@ -1,0 +1,62 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.*
+
+
+val directionArr = charArrayOf('U', 'D', 'L', 'R')
+lateinit var matrix: Array<IntArray>
+lateinit var visited: Array<BooleanArray>
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+    val cases = readLine().toInt()  // 테스트 케이스 개수
+    repeat(cases) {
+        var answer = 0
+        val mnk = readLine().split(" ").map { it.toInt() }
+        val m = mnk[0]
+        val n = mnk[1]
+        val k = mnk[2]
+        matrix = Array(m) { IntArray(n) }
+        visited = Array(m) { BooleanArray(n) }
+        for (i in 0 until k) {
+            val mn = readLine().split(" ").map { it.toInt() }
+            matrix[mn[0]][mn[1]] = 1
+        }
+        for (i in 0 until m){
+            for (j in 0 until n){
+                if (matrix[i][j] == 1 && !visited[i][j]){
+                    answer++
+                    bfs(Vege(i, j), Vege(m-1, n-1))
+                }
+            }
+        }
+        println(answer)
+    }
+
+}
+
+fun bfs(start: Vege, limit: Vege) {
+    val que = LinkedList<Vege>()
+    que.offer(start)
+    while (!que.isEmpty()){
+        val current = que.pop()
+        for (i in directionArr.indices){
+            val (m, n) = safeIndexConversion(current, directionArr[i], limit)
+            if (matrix[m][n] == 1 && !visited[m][n]) {
+                visited[m][n] = true
+                que.push(Vege(m, n))
+            }
+        }
+    }
+}
+
+fun safeIndexConversion(current: Vege, direction: Char, limit: Vege): Vege {
+    val (m, n) = current
+    val (x, y) = limit
+    return when(direction){
+        'U' -> Vege(m, if (n > 0) n-1 else 0)
+        'D' -> Vege(m, if (n < y) n+1 else y)
+        'L' -> Vege(if (m > 0) m - 1 else 0, n)
+        else -> Vege(if (m < x) m + 1 else x, n)
+    }
+}
+
+data class Vege(val m: Int, val n: Int)
