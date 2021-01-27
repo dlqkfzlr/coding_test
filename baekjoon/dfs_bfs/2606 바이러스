@@ -1,0 +1,35 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.*
+
+lateinit var matrix: Array<IntArray>
+lateinit var visit: BooleanArray
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+    val size = readLine().toInt()   // 정점 수
+    matrix = Array(size) { IntArray(size) }
+    visit = BooleanArray(size)
+    val edges = readLine().toInt()  // 간선 수
+    for (i in 0 until edges) {
+        val tmp = readLine().split(" ").map { it.toInt() - 1 }
+        matrix[tmp[0]][tmp[1]] = 1
+        matrix[tmp[1]][tmp[0]] = 1
+    }
+    bfs(0)
+    println(visit.count{ it } - 1)  // 1번 컴퓨터 제외
+}
+
+private fun bfs(start: Int){
+    val que = LinkedList<Int>()
+    visit[start] = true
+    que.offer(start)
+    while (!que.isEmpty()){
+        val vrtx = que.pop()
+        for (i in matrix.indices){
+            if (matrix[vrtx][i] == 1 && !visit[i]) {
+                visit[i] = true
+                que.offer(i)
+            }
+        }
+    }
+}
+
