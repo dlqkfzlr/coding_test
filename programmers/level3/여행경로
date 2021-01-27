@@ -1,6 +1,6 @@
 /* 모범답안 참고한 풀이 
    Combination 구하듯이 dfs를 함
-   종료조건이 포함됨 */
+   "종료조건 & 재귀호출 앞뒤로 visited[i]값 변경" 이 포함됨 */
 class Solution {
     lateinit var visited: BooleanArray
     lateinit var pathList: MutableList<String>
