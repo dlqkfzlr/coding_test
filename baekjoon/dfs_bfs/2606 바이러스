@@ -18,7 +18,7 @@ fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
     println(visit.count{ it } - 1)  // 1번 컴퓨터 제외
 }
 
-private fun bfs(start: Int){
+fun bfs(start: Int){
     val que = LinkedList<Int>()
     visit[start] = true
     que.offer(start)
