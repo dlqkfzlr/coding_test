@@ -1,0 +1,80 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.*
+
+var dirArr =  charArrayOf('u', 'd', 'f', 'b', 'l', 'r') // 위, 아래, 앞, 뒤, 왼, 오
+lateinit var matrix: Array<Array<IntArray>>
+lateinit var matureArr: Array<Array<IntArray>>      // 도달일수를 저장
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+    val temp = readLine().split(" ").map { it.toInt() }
+    val m = temp[0]
+    val n = temp[1]
+    val h = temp[2]
+    var total = 0
+    var immature = 0
+    matrix = Array(h) { Array(n) { IntArray(m) } }
+    matureArr = Array(h) { Array(n) { IntArray(m) } }
+    val startList = mutableListOf<Tomato>()
+    for (k in 0 until h){
+        for (i in 0 until n){
+            val row = readLine().split(" ").map { it.toInt() }
+            for (j in 0 until m){
+                val tomato = row[j]
+                if (tomato != -1) total++
+                if (tomato == 0) immature++
+                if (tomato == 1) {
+                    startList.add(Tomato(j, i, k))
+                    matureArr[k][i][j] = 1
+                }
+                matrix[k][i][j] = tomato
+            }
+        }
+    }
+    if (immature == 0) return@with println("0")
+    bfs(startList, Tomato(m-1, n-1, h-1))
+
+    var maxDay = 0
+    var matureCnt = 0
+    for (k in 0 until h){
+        for (i in 0 until n){
+            for (j in 0 until m){
+                val cnt = matureArr[k][i][j]
+                if (cnt != 0) matureCnt++
+                if (cnt > maxDay) maxDay = cnt
+            }
+        }
+    }
+    if (matureCnt != total) return@with println("-1")
+
+    println(maxDay-1)
+}
+
+private fun bfs(start: List<Tomato>, limit: Tomato) {
+    val que = LinkedList<Tomato>()
+    start.forEach { que.offer(it) }
+    while (!que.isEmpty()){
+        val mature = que.poll()
+        for (i in dirArr.indices){
+            val (m, n, h) = safeIndexMove(mature, dirArr[i], limit)
+            if (matrix[h][n][m] == 0 && matureArr[h][n][m] == 0){
+                matureArr[h][n][m] = matureArr[mature.z][mature.y][mature.x] + 1
+                que.offer(Tomato(m, n, h))
+            }
+        }
+    }
+}
+
+fun safeIndexMove(tmt: Tomato, dir: Char, limit: Tomato): Tomato{
+    val (x, y, z) = tmt
+    val (a, b, c) = limit
+    return when(dir){
+        'r' -> Tomato(if (x < a) x + 1 else a, y, z)
+        'l' -> Tomato(if (x > 0) x - 1 else 0, y, z)
+        'f' -> Tomato(x, if (y < b) y + 1 else b, z)
+        'b' -> Tomato(x, if (y > 0) y - 1 else 0, z)
+        'u' -> Tomato(x, y, if (z < c) z + 1 else c)
+        else -> Tomato(x, y, if (z > 0) z - 1 else 0)
+    }
+}
+
+data class Tomato(val x: Int, val y: Int, val z: Int)
