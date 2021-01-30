@@ -1,0 +1,42 @@
+/* Array문제를 풀때는 항상 ArrayIndexOutOfBoundsException에 주의하자 */
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.*
+
+const val LIMIT = 100001
+val moveArray = intArrayOf(0, 1, 2)
+lateinit var visit: LongArray
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))){
+    val tmp = readLine().split(" ").map { it.toInt() }
+    val start = tmp[0]
+    val end = tmp[1]
+    visit = LongArray(LIMIT)
+    println(bfs(start, end))
+}
+
+fun bfs(start: Int, end: Int): Long {
+    val que = LinkedList<Int>()
+    visit[start] = 1
+    que.offer(start)
+    while (!que.isEmpty()){
+        val subin = que.poll()
+        for (i in moveArray.indices){
+            val moved = safeIndexMove(subin, moveArray[i])
+            if (visit[moved] == 0L){
+                if (moved == end){
+                    return visit[subin]
+                } else {
+                    visit[moved] = visit[subin] + 1
+                    que.offer(moved)
+                }
+            }
+        }
+    }
+    return 0L
+}
+
+fun safeIndexMove(s: Int, type: Int): Int  = when(type){ // type: 0 = walk front, 1 = walk back, 2 = jump
+    0 -> if (s < LIMIT - 1) s + 1 else LIMIT - 1
+    1 -> if (s > 0) s - 1 else 0
+    else -> if (s <= LIMIT / 2) 2 * s else s
+}
