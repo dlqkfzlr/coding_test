@@ -1,0 +1,58 @@
+/* bfs의 큐로 PriorityQueue를 사용하는 것이 문제 포인트 */
+
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.*
+
+val dirArray = arrayOf(0, 1, 2, 3)
+lateinit var matrix: Array<IntArray>
+lateinit var visited: Array<BooleanArray>
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+    val limit = readLine().split(" ").map { it.toInt() - 1 }
+    val x = limit[0]
+    val y = limit[1]
+    matrix = Array(y+1) { IntArray(x+1) }
+    visited = Array(y+1) { BooleanArray(x+1) { false } }
+    for (i in 0..y) {
+        val tmp = readLine().map { it.toInt() - 48 }
+        for (j in 0..x) {
+            matrix[i][j] = tmp[j]
+        }
+    }
+    println(bfs(Node(0,0,0), Node(x, y, 0)))
+}
+
+fun bfs(start: Node, last: Node): Int {
+    val que = PriorityQueue<Node>()
+    que.offer(start)
+    while (!que.isEmpty()) {
+        val node = que.poll()
+        println("poll노드: $node")
+        if (node.x == last.x && node.y == last.y) return node.cnt
+        for (i in 0..3){
+            val (x, y, cnt) = safeIdxMove(node, dirArray[i], limit = last)
+            if (!visited[y][x]) {
+                visited[y][x] = true
+                val moved = Node(x, y, if (matrix[y][x] == 1) cnt+1 else cnt)
+                println("offer노드:${moved}")
+                que.offer(moved)
+            }
+        }
+    }
+    return 0
+}
+
+fun safeIdxMove(node: Node, direction: Int, limit: Node): Node {
+    val (x, y, c1) = node
+    val (m, n, _) = limit
+    return when (direction) {
+        0 -> Node(x, if (y < n) y + 1 else n, c1)
+        1 -> Node(x, if (y > 0) y - 1 else 0, c1)
+        2 -> Node(if (x > 0) x - 1 else 0, y, c1)
+        else -> Node(if (x < m) x + 1 else m, y, c1)
+    }
+}
+
+data class Node(val x: Int, val y: Int, val cnt: Int) : Comparable<Node> {
+    override fun compareTo(other: Node): Int = cnt - other.cnt
+}
