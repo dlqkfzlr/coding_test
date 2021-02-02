@@ -1,0 +1,39 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
+lateinit var map: HashMap<String, List<String>>
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))){
+    map = hashMapOf()
+    val n = readLine().toInt()
+    for (i in 0 until n){
+        val tmp = readLine().split(" ")
+        val list = listOf<String>(tmp[1], tmp[2])
+        map[tmp[0]] = list
+    }
+    preorder("A")
+    println()
+    inorder("A")
+    println()
+    postorder("A")
+}
+
+fun preorder(start: String){
+    if (start == ".") return
+    print(start)
+    preorder(map[start]?.get(0) ?: ".")
+    preorder(map[start]?.get(1) ?: ".")
+}
+
+fun inorder(start: String){
+    if (start == ".") return
+    inorder(map[start]?.get(0) ?: ".")
+    print(start)
+    inorder(map[start]?.get(1) ?: ".")
+}
+
+fun postorder(start: String){
+    if (start == ".") return
+    postorder(map[start]?.get(0) ?: ".")
+    postorder(map[start]?.get(1) ?: ".")
+    print(start)
+}
