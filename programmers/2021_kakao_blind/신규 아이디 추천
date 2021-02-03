@@ -1,0 +1,70 @@
+class Solution {
+    fun solution(new_id: String): String {
+        return mapToProperId(new_id)
+    }
+    
+    fun mapToProperId(new_id: String): String {
+
+        // 1, 2단계
+        var newId = new_id
+            .asSequence()
+            .map { it.toLowerCase() }
+            .filter { it.isLetterOrDigit() || it == '-' || it == '_' || it == '.' }.joinToString("")
+
+        // 3, 4단계 : Null 주의
+        if (!newId.isEmpty()) {
+            newId = map34(secondId = newId)
+        }
+
+        // 5단계
+        if (newId.isEmpty()) newId += "a"
+
+        // 6, 7단계
+        val properId = map67(newId)
+
+        return properId
+    }
+
+    fun map34(secondId: String): String {
+        val thirdId = StringBuilder()
+        var cnt = 0
+        for (i in secondId.indices) {
+            val tempChar = secondId[i]
+            if (tempChar == '.') {
+                if (cnt == 0) {
+                    thirdId.append(tempChar)
+                    cnt++
+                }
+            } else {
+                thirdId.append(tempChar)
+                cnt = 0
+            }
+        }
+        var fourthId = thirdId.toString()
+        if (fourthId.first() == '.') fourthId = fourthId.substring(1, fourthId.count())
+        if (!fourthId.isEmpty() && fourthId.last() == '.') fourthId = fourthId.substring(0, fourthId.lastIndex)
+
+        return fourthId
+    }
+
+    fun map67(fifthId: String): String {
+        val size = fifthId.count()
+        return when {
+            size >= 16 -> {
+                fifthId.substring(0, if (fifthId[14] == '.') 14 else 15)
+            }
+            size <= 2 -> {
+                val gap = 3 - size
+                var seventhId = fifthId
+                val lastChar = seventhId.last()
+                repeat(gap) {
+                    seventhId += lastChar
+                }
+                seventhId
+            }
+            else -> {
+                fifthId
+            }
+        }
+    }
+}
