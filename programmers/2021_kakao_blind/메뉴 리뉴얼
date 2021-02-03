@@ -1,0 +1,68 @@
+fun solution(orders: Array<String>, course: IntArray): Array<String> {
+    val answer = mutableListOf<String>()
+    val tempAnswer = mutableListOf<CandidResult>()
+    val sizeAnswer = mutableListOf<CandidResult>()
+    val menuArr = orders.reduce { acc, s ->  acc+s }.toCharArray().distinct().sorted().toTypedArray()
+
+    for (size in course){
+        makeCombination(size, menuArr)
+        for (comb in menuCombList){
+            val candResult = checkCandidate(comb, orders)
+            if (candResult.includeCount >= 2){
+                sizeAnswer.add(candResult)
+            }
+        }
+        if (!sizeAnswer.isEmpty()) {
+            val maxCourse = sizeAnswer.maxBy { it.includeCount }
+            println("maxCourse:$maxCourse")
+            for (i in sizeAnswer.indices){
+                if (sizeAnswer[i].includeCount == maxCourse?.includeCount){
+                    answer.add(sizeAnswer[i].order)
+                }
+            }
+        }
+        menuCombList.clear()
+        sizeAnswer.clear()
+    }
+    answer.sort()
+    return answer.toTypedArray()
+}
+
+fun makeCombination(size: Int, menus: Array<Char>): MutableList<String> {
+    comb("", 0, size, menus)
+    return menuCombList
+}
+
+fun comb(current: String, curIdx: Int, limit: Int, menus: Array<Char>){
+    if (current.count() >= limit){
+        menuCombList.add(current)
+        return
+    }
+    if (curIdx > menus.lastIndex) return
+    comb(current+menus[curIdx], curIdx+1, limit, menus)
+    comb(current, curIdx+1, limit, menus)
+}
+
+fun checkCandidate(candid: String, orders: Array<String>): CandidResult {
+    var candidCnt = 0
+    for (order in orders){
+        if (order == candid) {
+            candidCnt++
+            continue
+        }
+        var cnt = 0
+        for (menu in candid){
+            if (order.contains(menu)){
+                cnt ++
+            } else {
+                break
+            }
+        }
+        if (cnt == candid.count()) candidCnt++
+    }
+    return CandidResult(candid, candidCnt)
+}
+
+data class CandidResult(val order: String, val includeCount: Int): Comparable<CandidResult> {
+    override fun compareTo(o: CandidResult) = includeCount - o.includeCount
+}
