@@ -1,0 +1,39 @@
+import java.util.*
+
+class Solution {
+    lateinit var bridge: LinkedList<Truck>
+    lateinit var trucks: LinkedList<Int>
+    fun solution(bridge_length: Int, weight: Int, truck_weights: IntArray): Int {
+        bridge = LinkedList()
+        trucks = LinkedList()
+        trucks.addAll(truck_weights.toList())
+        
+        // 첫번째 truck이 bridge에 진입한 상태로 시작
+        var curTime = 1
+        var totalBridgeWeight = trucks.pop()
+        bridge.offer(Truck(truck_weights[0], curTime))
+        while (!bridge.isEmpty()){
+            curTime++
+
+            // Truck 탈출
+            val firstTruck = bridge.peek()
+            if (curTime - firstTruck.enterTime >= bridge_length){
+                bridge.pop()
+                totalBridgeWeight -= firstTruck.weight
+            }
+
+            // Truck 진입
+            if (!trucks.isEmpty() && totalBridgeWeight + trucks.peek() <= weight){
+                val truckWeight = trucks.pop()
+                bridge.offer(Truck(truckWeight, curTime))
+                totalBridgeWeight += truckWeight
+            }
+
+        }
+
+        return curTime
+    }
+
+    data class Truck(val weight: Int, val enterTime: Int)
+    
+}
