@@ -1,0 +1,35 @@
+import java.util.*
+
+class Solution {
+    lateinit var que: LinkedList<Int>
+    fun solution(progresses: IntArray, speeds: IntArray): IntArray {
+        val answer = arrayListOf<Int>()
+        que = LinkedList()
+        val size = progresses.size
+        for (i in 0 until size) {
+            val leftDay = (100 - progresses[i]) / speeds[i]
+            val addDay = if ((100 - progresses[i]) % speeds[i] != 0) 1 else 0
+            que.offer(leftDay + addDay)
+        }
+        var days = 0
+        var distWorks = 0
+        while(!que.isEmpty()){
+            if (que.peek() > days) {
+                days++
+                if (distWorks!=0){
+                    answer.add(distWorks)
+                    distWorks = 0
+                }
+            }
+            else {
+                que.poll()
+                distWorks++
+            }
+        }
+        if (distWorks!=0){
+            answer.add(distWorks)
+        }
+
+        return answer.toIntArray()
+    }
+}
