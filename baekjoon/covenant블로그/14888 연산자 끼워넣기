@@ -1,0 +1,53 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.*
+
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+    val n = readLine().toInt()
+    val numList = readLine().split(" ").map { it.toInt() }
+
+    val stack = Stack<Int>()
+    numList.reversed().forEach {
+        stack.push(it)
+    }
+
+    val operList = readLine().split(" ").map { it.toInt() }
+    val tempList = mutableListOf<Int>()
+    for (i in 0..3){
+        val cnt = operList[i]
+        repeat(cnt){
+            tempList.add(i)
+        }
+    }
+
+    val resultList = mutableListOf<Int>()
+    val operPermutationList = permute(tempList.toIntArray())
+    for (operations in operPermutationList){
+        val temp = Stack<Int>()
+        temp.addAll(stack)
+        var target = temp.pop()
+        var idx = 0
+        while (!temp.isEmpty()){
+            val num = temp.pop()
+            when(operations[idx++]){
+                0 -> target += num
+                1 -> target -= num
+                2 -> target *= num
+                else -> target /= num
+            }
+        }
+        resultList.add(target)
+    }
+
+    println(resultList.maxOrNull())
+    println(resultList.minOrNull())
+}
+
+fun permute(
+    nums: IntArray,
+    temp: List<Int> = listOf(),
+    numsList: List<Int> = nums.toList()
+): List<List<Int>> = when (numsList.size) {
+    1 -> listOf(temp + numsList)
+    else -> numsList.flatMap { num -> permute(nums, temp + num, numsList - num) }
+}
