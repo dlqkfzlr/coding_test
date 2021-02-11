@@ -1,0 +1,82 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
+lateinit var alphComb: MutableList<String>
+lateinit var alphList: List<String>
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))){
+    var answer = 0
+    val nk = readLine().split(" ").map { it.toInt() }
+    val n = nk[0]
+    val k = nk[1] - 5   // a,c,i,n,t (5개는 필수)
+    val remainWords = mutableListOf<String>()
+    val alphSet = mutableSetOf<String>()
+    for (i in 0 until n){
+        var temp = readLine().toString()
+        temp = temp.removePrefix("anta")
+        temp = temp.removeSuffix("tica")
+        temp = filterAlphabets(temp, "acint")
+        if (temp.isBlank()){
+            answer++
+        } else {
+            remainWords.add(temp)
+            for (alphabet in temp){
+                alphSet.add(alphabet.toString())
+            }
+        }
+    }
+    // alphSet = {r, h, e, l, o}
+    // remainWords = {rc, hello, car}
+    alphList = alphSet.toList()
+    // alphComb = mutableListOf()
+    // alphSet로 요소가 k개 인 조합을 만듦
+    val combResult = mutableListOf<List<String>>()
+    combination(combResult, alphList, Array<Boolean>(alphList.count()){ false }, 0, k)
+    // {r}, {h}, ...
+    // 그걸 가지고 filterAlphabets 반복문으로
+    // 남은 단어 읽을수있는지 탐색
+    // 가장 큰 결과값을 출력
+    var maxAnswer = 0
+    for (comb in combResult){
+        var tempAnswer = 0
+        for (word in remainWords){
+            val result = filterAlphabets(word, comb.toString())
+            if (result.isBlank()) tempAnswer++
+        }
+        if (tempAnswer > maxAnswer) maxAnswer = tempAnswer
+    }
+
+    println(maxAnswer + answer)
+
+}
+
+fun filterAlphabets(str: String, list: String): String {
+    var temp = str
+    for (alphabet in list){
+        if (str.isNotBlank()) temp = temp.replace(alphabet.toString(), "") else return ""
+    }
+    return temp
+}
+
+fun makeCombOfK(curIdx: Int, count: Int, limitSize: Int, limit: Int, list: String){
+    if (count >= limit){
+        alphComb.add(list)
+        return
+    } else if (curIdx >= limitSize){
+        return
+    }
+    makeCombOfK(curIdx+1, count, limitSize, limit, list)
+    makeCombOfK(curIdx+1, count+1, limitSize, limit, list+ alphList[curIdx])
+}
+
+fun <T> combination(result: MutableList<List<T>>, element: List<T>,
+                    check: Array<Boolean>, start: Int, left: Int) {
+    if(left== 0) {
+        result.addAll(listOf(element.filterIndexed{ index, t -> check[index] }))
+    }	else {
+        for(i in start until element.size){
+            check[i] = true
+            combination(result, element, check, i+1, left-1)
+            check[i] = false
+        }
+    }
+}
