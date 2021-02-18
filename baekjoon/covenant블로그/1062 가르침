@@ -1,3 +1,63 @@
+/* 통과된 백트레킹 풀이 */
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
+var max = 0
+var visit = Array<Boolean>(26) { false }
+lateinit var strArr: Array<String>
+var N = 0
+var K = 0
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))){
+    val nk = readLine().split(" ").map { it.toInt() }
+    N = nk[0]
+    K = nk[1] - 5   // a,c,i,n,t (5개는 필수)
+    if (K < 0){
+        println(0)
+        return
+    } else if (K == 21){
+        println(N)
+        return
+    }
+    strArr = Array<String>(N) { "" }
+    for (i in 0 until N){
+        val temp = readLine().toString()
+        strArr[i] = temp.substring(4, temp.length-4)
+    }
+    visit['a'.toInt()-97]=true
+    visit['n'.toInt()-97]=true
+    visit['t'.toInt()-97]=true
+    visit['i'.toInt()-97]=true
+    visit['c'.toInt()-97]=true
+    dfs(0, 0)
+    println(max)
+}
+
+fun dfs(start: Int, count: Int) {
+    if (count == K){
+        var rCount = 0
+        for (i in 0 until N){
+            var isReadable = true
+            for (j in strArr[i].indices) {
+                if (!visit[strArr[i][j].toInt() - 97]){
+                    isReadable = false
+                    break
+                }
+            }
+            if (isReadable) rCount++
+        }
+        max = max.coerceAtLeast(rCount)
+        return
+    }
+    for (i in start until 26){
+        if (!visit[i]){
+            visit[i] = true
+            dfs(i, count+1)
+            visit[i] = false
+        }
+    }
+}
+
+/*시간초과 났던 백트레킹 풀이*/
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
