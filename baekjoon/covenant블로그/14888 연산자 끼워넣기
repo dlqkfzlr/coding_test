@@ -1,3 +1,61 @@
+/* 다시 풀어서 맞은 풀이: permutation시에 Base case부분에 검증로직을 같이 넣어줘야 시간초과가 나지 않음 */
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
+var max = 0
+var min = 1000000000
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+    val n = readLine().toInt()
+    val numArray = Array(n){ 0 }
+    readLine().split(" ").mapIndexed { index, s -> numArray[index] = s.toInt() }
+
+    val operatorList = readLine().split(" ").map { it.toInt() }
+    val tempList = mutableListOf<Int>()
+    for (i in 0..3){
+        val cnt = operatorList[i]
+        repeat(cnt){
+            tempList.add(i)
+        }
+    }
+
+    val resultList = permute(tempList.toIntArray(), numArray)
+
+    println(resultList.maxOrNull())
+    println(resultList.minOrNull())
+}
+
+fun permute(
+    operatorArr: IntArray,
+    numberArr: Array<Int>,
+    temp: List<Int> = listOf(),
+    operatorList: List<Int> = operatorArr.toList()
+): List<Int> = when (operatorList.size) {
+    1 -> {
+        val result = temp + operatorList
+        listOf(calculateResult(result, numberArr))
+    }
+    else -> {
+        operatorList.flatMap { num -> permute(operatorArr, numberArr, temp + num, operatorList - num) }
+    }
+}
+
+fun calculateResult(
+    operationList: List<Int>,
+    numberArr: Array<Int>
+): Int {
+    var result = numberArr[0]
+    for (i in 1 until numberArr.size){
+        when(operationList[i-1]){
+            0 -> result += numberArr[i]
+            1 -> result -= numberArr[i]
+            2 -> result *= numberArr[i]
+            else -> result /= numberArr[i]
+        }
+    }
+    return result
+}
+
+/* 시간초과 났던 풀이 */
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
