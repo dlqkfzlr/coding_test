@@ -1,3 +1,40 @@
+/* 플로이드와샬 풀이 */
+class Solution {
+    fun solution(n: Int, results: Array<IntArray>): Int {
+        var answer = 0
+        val INF = 10000
+        val FW = Array(n) { Array(n) { INF } }
+
+        for (result in results) {
+            FW[result[0]-1][result[1]-1] = 1
+        }
+
+        for (k in 0 until n) {
+            for (i in 0 until n) {
+                for (j in 0 until n) {
+                    if (FW[i][j] > FW[i][k] + FW[k][j])
+                        FW[i][j] = FW[i][k] + FW[k][j]
+                }
+            }
+        }
+
+        for (a in 0 until n){
+            var isDecidable = true
+            for (b in 0 until n){
+                if (a == b) continue
+                if (FW[a][b] == INF && FW[b][a] == INF){
+                    isDecidable = false
+                    break
+                }
+            }
+            if (isDecidable) answer++
+        }
+
+        return answer
+    }
+}
+
+/* 다른사람 풀이 */
 import java.util.*
  
 class Solution {
