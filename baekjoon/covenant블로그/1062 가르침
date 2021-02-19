@@ -1,4 +1,4 @@
-/* 통과된 백트레킹 풀이 */
+/* 통과된 백트레킹 풀이 => 백트레킹 Base Case에 문자열체크열 로직을 포함시켜서 완전탐색이 두번 일어나지 않게 했던 것이 관건 */
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
