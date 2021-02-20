@@ -1,0 +1,61 @@
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+import java.text.ParseException;
+
+class Solution {
+    public int solution(String[] lines) throws ParseException {
+        int size = lines.length;
+        int[] startArr = new int[lines.length];
+        int[] endArr = new int[lines.length];
+
+        getTimes(lines, startArr, endArr);
+
+        int max = 0;
+        for(int a=0; a< size; a++){
+            long start = startArr[a];
+            long end = start + 999;
+            int result = 0;
+            for(int i=0; i< size; i++){
+                if ((startArr[i] < start && start <= endArr[i])
+                        || (start <= startArr[i] && startArr[i] <= end )){
+                    result++;
+                }
+            }
+            if (max < result) max = result;
+        }
+        for(int a=0; a< size; a++){
+            long start = endArr[a];
+            long end = start + 999;
+            int result = 0;
+            for(int i=0; i< size; i++){
+                if ((startArr[i] < start && start <= endArr[i])
+                        || (start <= startArr[i] && startArr[i] <= end )){
+                    result++;
+                }
+            }
+            if (max < result) max = result;
+        }
+        return max;
+    }
+
+    private void getTimes(String[] lines, int[] startTimes, int[] endTimes) {
+        for(int i = 0 ; i < lines.length ; ++i) {
+            String[] log = lines[i].split(" ");
+            String[] responseTime = log[1].split(":");
+            int processingTime = (int)(Double.parseDouble(log[2].substring(0, log[2].length() - 1)) * 1000);
+            System.out.println("processingTime:"+processingTime);
+
+            int startTime = 0;
+            int endTime = 0;
+
+            endTime += Integer.parseInt(responseTime[0]) * 60 * 60 * 1000;
+            endTime += Integer.parseInt(responseTime[1]) * 60 * 1000;
+            endTime += (int)(Double.parseDouble(responseTime[2]) * 1000);
+            startTime = endTime - processingTime + 1;
+
+            startTimes[i] = startTime;
+            endTimes[i] = endTime;
+        }
+    }
+}
