@@ -1,0 +1,34 @@
+/* 정확도: 합격, 효율성: 불합격 */
+fun solution(info: Array<String>, query: Array<String>): IntArray {
+    val answer = IntArray(query.count())
+
+    for (i in query.indices){
+        val temp = query[i].split(" and ").toMutableList()
+        // java, backend, junior, pizza, 100
+        val lastCondition = temp[3].split(" ")
+        temp[3] = lastCondition[0]
+        temp.add(lastCondition[1])
+
+        var satisfyingCount = 0
+        for (a in info.indices){
+            var isSatisfying = true
+            val details = info[a].split(" ")
+            println("query:${temp.joinToString()}")
+            println("info:${details.joinToString()}")
+            // 바로 검사 들어가서 하나라도 틀리면 바로 out
+            for (b in details.indices){
+                if (!isSatisfying) break
+                val target = temp[b]
+                if (target == "-") continue
+                if (b == 4 ){
+                    if (details[b].toInt() < target.toInt()) isSatisfying = false
+                } else if (details[b] != temp[b]) {
+                    isSatisfying = false
+                }
+            }
+            if (isSatisfying) satisfyingCount++
+        }
+        answer[i] = satisfyingCount
+    }
+    return answer
+}
