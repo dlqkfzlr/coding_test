@@ -1,0 +1,48 @@
+/* 최소신장트리를 구할때 Prim 알고리즘을 사용해서 풀이함 */
+class Solution {
+    fun solution(n: Int, costs: Array<IntArray>): Int {
+        var answer = 0
+        val INF = 9999
+        val P = Array(n) { IntArray(n) { INF } }
+        for (cost in costs) {
+            val x = cost[0]
+            val y = cost[1]
+            val z = cost[2]
+            P[x][y] = z
+            P[y][x] = z
+        }
+
+        val near = IntArray(n) { 0 }    // i에 가까운 적점의 idx를 저장
+        val isblue = BooleanArray(n) { true }
+        isblue[0] = false
+        var newred = 0
+        var minval = INF
+
+        for(i in 1 until n){
+            minval = INF
+            // 트리와 가장 가까운 청점 찾기
+            for(b in 0 until n){
+                if(isblue[b]){
+                    if(P[b][near[b]] < minval){
+                        minval = P[b][near[b]]
+                        newred = b
+                    }
+                }
+            }
+
+            // 찾은 청점을 적점으로 변경
+            isblue[newred] = false
+            answer += P[newred][near[newred]]
+
+            for(b in 0 until n){
+                if(isblue[b]){
+                    if(P[b][newred] < P[b][near[b]]){
+                        near[b] = newred
+                    }
+                }
+            }    
+        }
+
+        return answer
+    }
+}
