@@ -1,0 +1,46 @@
+import java.util.*
+
+class Solution {
+    lateinit var numsetArray: Array<TreeSet<Long>> // 검색이 빠른 TreeSet 사용
+    fun solution(N: Int, number: Int): Int {
+        val num = number.toLong()
+        numsetArray = Array(9){ TreeSet<Long>() }
+        for (i in 1..8){
+            makeNumSet(i, N)
+            if (numsetArray[i].contains(num))
+                return i
+        }
+
+        return -1
+    }
+
+    fun makeNumSet(i: Int, N: Int){
+        val currentTreeSet = TreeSet<Long>()
+        var firstElement = 0L
+        for (f in 0 until i){
+            firstElement = firstElement * 10 + N
+        }
+        currentTreeSet.add(firstElement)
+        if (i == 1) {
+            numsetArray[i] = currentTreeSet
+            return
+        }
+        for (a in 1 until i){
+            val aTreeSet = numsetArray[a]
+            val bTreeSet = numsetArray[i-a]
+            for (aNumber in aTreeSet){
+                for (bNumber in bTreeSet){
+                    repeat(4){
+                        if (a <= i-a) {
+                            currentTreeSet.add(aNumber + bNumber)
+                            currentTreeSet.add(aNumber * bNumber)
+                        }
+                        currentTreeSet.add(aNumber - bNumber)
+                        if (bNumber != 0L) currentTreeSet.add(aNumber / bNumber)
+                    }
+                }
+            }
+        }
+        numsetArray[i] = currentTreeSet
+    }
+}
