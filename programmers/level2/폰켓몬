@@ -1,0 +1,14 @@
+import java.util.*;
+
+class Solution {
+    public int solution(int[] nums) {
+        int answer = 0;
+        HashSet pSet = new HashSet<Integer>();
+        for(int num: nums){
+            pSet.add(num);
+        }
+        int limit = nums.length / 2;
+        int setLimit = pSet.size();
+        return (limit > setLimit) ? setLimit : limit;
+    }
+}
