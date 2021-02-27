@@ -1,0 +1,23 @@
+import java.util.*;
+
+class Solution {
+    boolean solution(String s) {
+        boolean answer = true;
+        Stack pStack = new Stack<Character>();
+        for(char p : s.toCharArray()){
+            if(p == '(') {
+                pStack.push(p);
+                continue;
+            }
+            if(p == ')') {
+                if(pStack.isEmpty()){
+                    return false;
+                } else {
+                    pStack.pop();    
+                }
+            }
+        }
+
+        return pStack.isEmpty();
+    }
+}
