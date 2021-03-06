@@ -1,0 +1,60 @@
+import java.util.*;
+import java.util.Map.*;
+import java.lang.Math.*;
+
+class Solution {
+    Map<String, Integer> hashMap1, hashMap2;
+    Set<String> totalSet;
+    int common, total;
+    public int solution(String str1, String str2) {
+        int answer = 0;
+        hashMap1 = new HashMap();
+        hashMap2 = new HashMap();
+        totalSet = new HashSet();
+        common = 0;
+        total = 0;
+        char[] arr1 = str1.toLowerCase().toCharArray();
+        char[] arr2 = str2.toLowerCase().toCharArray();
+        for(int i=0; i<arr1.length-1; i++){
+            if(arr1[i] >= 97 && arr1[i] <= 122
+              && arr1[i+1] >= 97 && arr1[i+1] <= 122){
+                String temp = String.valueOf(arr1[i]) + String.valueOf(arr1[i+1]);
+                totalSet.add(temp);
+                if(hashMap1.containsKey(temp)){
+                    hashMap1.put(temp, hashMap1.get(temp)+1);
+                } else {
+                    hashMap1.put(temp, 1);
+                }
+            }
+        }
+        for(int i=0; i<arr2.length-1; i++){
+            if(arr2[i] >= 97 && arr2[i] <= 122
+              && arr2[i+1] >= 97 && arr2[i+1] <= 122){
+                String temp = String.valueOf(arr2[i]) + String.valueOf(arr2[i+1]);
+                totalSet.add(temp);
+                if(hashMap2.containsKey(temp)){
+                    hashMap2.put(temp, hashMap2.get(temp)+1);
+                } else {
+                    hashMap2.put(temp, 1);
+                }
+            }
+        }
+
+        // 교집합 개수찾기 (한쪽 기준으로 반복)
+        for(Entry<String, Integer> elem: hashMap1.entrySet()){
+            String key = elem.getKey();
+            int value = elem.getValue();
+            if(hashMap2.containsKey(key)){
+                common += Math.min(value, hashMap2.get(key));
+            }
+        }
+
+        // 합집합 개수찾기 (totalSet 반복문)
+        Iterator<String> totalIterator = totalSet.iterator();
+        while(totalIterator.hasNext()){
+            String key = totalIterator.next();
+            total += Math.max(hashMap1.getOrDefault(key, 0), hashMap2.getOrDefault(key, 0));
+        }
+        return (total == 0) ? 65536 : common * 65536 / total;
+    }
+}
