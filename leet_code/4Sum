@@ -1,0 +1,40 @@
+class Solution {
+    
+   fun fourSum(nums: IntArray, target: Int): List<List<Int>> {
+        val answer = mutableSetOf<List<Int>>()
+        val arr = nums.toList()
+        val n = 4
+        val comb = mutableListOf<List<Int>>()
+        combination(comb, arr, Array(arr.size) { false }, 0, n)
+        val tempSet = comb.toSet()
+        for (list in tempSet){
+            if (list.reduce { acc, i ->  acc + i } == target){
+                var isProper = true
+                for (temp in answer){
+                    if (temp.containsAll(list) && list.containsAll(temp)) {
+                        isProper = false
+                        break
+                    }
+                }
+                if (isProper) {
+                    answer.add(list)
+                }
+            }
+        }
+        return answer.toList()
+
+    }
+
+    fun <T> combination(result: MutableList<List<T>>, element: List<T>,
+                        check: Array<Boolean>, start: Int, left: Int) {
+        if(left== 0) {
+            result.addAll(listOf(element.filterIndexed{ index, t -> check[index] }))
+        }	else {
+            for(i in start until element.size){
+                check[i] = true
+                combination(result, element, check, i+1, left-1)
+                check[i] = false
+            }
+        }
+    }
+}
