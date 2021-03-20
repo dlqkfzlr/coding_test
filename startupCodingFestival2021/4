@@ -1,0 +1,59 @@
+fun main(args: Array<String>) {
+    val preferenceMap = hashMapOf<Char, Float>()
+    readLine()!!.split(" ").map { it.toFloat() }.forEachIndexed { idx, point ->
+        val alphabet = when (idx) {
+            0 -> 'A'
+            1 -> 'B'
+            2 -> 'C'
+            3 -> 'D'
+            else -> 'E'
+        }
+        preferenceMap[alphabet] = point
+    }
+
+    val xy = readLine()!!.split(" ")
+    val y = xy[0].toInt()
+    val x = xy[1].toInt()
+
+    val statusArr = Array(y) { CharArray(x) { ' ' } }
+    val genreArr = Array(y) { CharArray(x) { ' ' } }
+    readLine()!!.forEachIndexed { index, c -> statusArr[0][index] = c }
+    readLine()!!.forEachIndexed { index, c -> statusArr[1][index] = c }
+    readLine()!!.forEachIndexed { index, c -> genreArr[0][index] = c }
+    readLine()!!.forEachIndexed { index, c -> genreArr[1][index] = c }
+
+    val infoList = mutableListOf<Info>()
+    for (a in 0 until y){
+        for (b in 0 until x){
+            infoList.add(Info(status = statusArr[a][b], genre = genreArr[a][b], pref = preferenceMap[genreArr[a][b]]!!, i = a, j = b))
+        }
+    }
+    val result = infoList.filter { it.status != 'W' }.sortedDescending()
+    result.forEach {
+        println("${it.genre} ${it.pref} ${it.i} ${it.j}")
+    }
+
+}
+
+data class Info(val status: Char, val genre: Char, val pref: Float, val i: Int, val j: Int) : Comparable<Info> {
+    //  1차: O, Y 순으로 비교 (정방향)
+    //  2차: star순으로 비교 (정방향)
+    // 1,2차 모두 같다면
+    // 3차: i작은순 (반대방향)
+    // 4차: j작은순 (반대방향)
+    override fun compareTo(other: Info): Int {
+        return if (status != other.status) {
+            status - other.status
+        } else {
+            if (pref != other.pref) {
+                ((pref*10 - other.pref*10)/10).toInt()
+            } else {
+                if (i != other.i) {
+                    other.i - i
+                } else {
+                    other.j - j
+                }
+            }
+        }
+    }
+}
