@@ -1,3 +1,4 @@
+/* 완전탐색으로 풀이 */
 fun main(args: Array<String>) {
     val size = readLine()!!.toInt()
     val fitArr = IntArray(size + 1)
