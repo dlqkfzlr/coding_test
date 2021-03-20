@@ -1,0 +1,21 @@
+lateinit var visited: LongArray
+lateinit var graph: LongArray
+fun main(args: Array<String>) {
+    val length = readLine()!!.toInt()
+    visited = LongArray(length)
+    graph = readLine()!!.map { it.toLong() - 48 }.toLongArray()
+    visited[0] = 1
+    visited[1] = graph[1]
+    for (i in 2 until length) {
+        visited[i] =
+            if (graph[i] == 0L) {
+                0
+            } else {
+                val i1 = if (graph[i - 1] == 0L) 0 else visited[i - 1]
+                val i2 = if (graph[i - 2] == 0L) 0 else visited[i - 2]
+                i1 + i2
+            }
+    }
+    println("${visited[length - 1]}")
+    println("${visited.joinToString()}")
+}
