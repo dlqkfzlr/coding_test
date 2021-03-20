@@ -1,0 +1,23 @@
+import kotlin.math.max
+
+fun main(args: Array<String>) {
+    val xy = readLine()!!.split(" ")
+    val y = xy[0].toInt()
+    val x = xy[1].toInt()
+
+    val matrix = Array(x) { IntArray(y) }
+    repeat(x){
+        readLine()!!.split(" ").map { it.toInt() }.forEachIndexed { index, num -> matrix[it][index] = num }
+    }
+
+    for (a in 0 until x){
+        for (b in 0 until y){
+            val upper = if (a-1 < 0) 0 else matrix[a-1][b]
+            val left = if (b-1 < 0) 0 else matrix[a][b-1]
+            val proper = max(upper, left)
+            matrix[a][b] = proper + matrix[a][b]
+        }
+    }
+
+    println(matrix[x-1][y-1])
+}
