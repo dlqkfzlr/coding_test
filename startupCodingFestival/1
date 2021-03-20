@@ -1,0 +1,32 @@
+fun main(args: Array<String>) {
+    val size = readLine()?.toInt()!!
+    val startTimeList = mutableListOf<Int>()
+    val endTimeList = mutableListOf<Int>()
+    repeat(size) {
+        readLine()?.let { time ->
+            val temp = time.split(" ~ ")
+            val startTemp = temp[0].split(":").map { it.toInt() }
+            val endTemp = temp[1].split(":").map { it.toInt() }
+
+            startTimeList.add(startTemp[0] * 60 + startTemp[1])
+            endTimeList.add(endTemp[0] * 60 + endTemp[1])
+        }
+    }
+    val finalStartTime = startTimeList.maxOrNull() ?: 0
+    val finalEndTime = endTimeList.minOrNull() ?: 0
+    if (finalStartTime >= finalEndTime) {
+        println("-1")
+    } else {
+        val startHourTemp = finalStartTime / 60
+        val startMinuteTemp = finalStartTime % 60
+        val startHour: String = if (startHourTemp < 10) "0${startHourTemp}" else "$startHourTemp"
+        val startMinute: String = if (startMinuteTemp < 10) "0${startMinuteTemp}" else "$startMinuteTemp"
+
+        val endHourTemp = finalEndTime / 60
+        val endMinuteTemp = finalEndTime % 60
+        val endHour: String = if (endHourTemp < 10) "0${endHourTemp}" else "$endHourTemp"
+        val endMinute: String = if (endMinuteTemp < 10) "0${endMinuteTemp}" else "$endMinuteTemp"
+
+        println("${startHour}:${startMinute} ~ ${endHour}:${endMinute}")
+    }
+}
