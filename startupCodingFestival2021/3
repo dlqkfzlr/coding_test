@@ -1,0 +1,37 @@
+fun main(args: Array<String>) {
+    val size = readLine()!!.toInt()
+    val fitArr = IntArray(size + 1)
+    val matrix = Array(size){ IntArray(size)}
+    repeat(size){
+        val line = readLine()!!.map { it.toInt() - 48 }.toIntArray()
+        matrix[it] = line
+    }
+
+    sizeLoop@ for (fit in 1.. size){
+        vertLoop@ for (i in 0 until size){
+            horzLoop@ for (j in 0 until size){
+                if (matrix[i][j] == 0) continue
+                val vertLimit = i + fit - 1
+                val horzLimit = j + fit - 1
+                if (vertLimit >= size) continue@sizeLoop
+                if (horzLimit >= size) continue@vertLoop
+
+                var isFitable = true
+                fitLoop@ for (vert in i..vertLimit){
+                    for (horz in j..horzLimit){
+                        if (matrix[vert][horz] == 0) {
+                            isFitable = false
+                            break@fitLoop
+                        }
+                    }
+                }
+                if (isFitable) fitArr[fit] = fitArr[fit] + 1
+            }
+        }
+    }
+
+    println("total: ${fitArr.reduce { acc, i -> acc+i }}")
+    repeat(size+1){
+        if (fitArr[it] != 0) println("size[$it]: ${fitArr[it]}")
+    }
+}
